@@ -110,7 +110,7 @@ namespace SSMT
                     {
                         _ = SSMTMessageHelper.Show(
                         "运行结果: " + runResult + ". \n\n很遗憾运行失败了，参考运行结果和运行日志改变策略再试一次吧。\n\n1.请检查您的配置是否正确.\n2.请查看日志获取更多细节信息.\n3.请检查您是否使用的是最新版本，新版本可能已修复此问题\n4.请联系NicoMico寻求帮助或在Github上提交issue: https://github.com/StarBobis/DirectX-BufferModTool.\n\n点击确认为后您打开本次运行日志。",
-                        "Run result: " + runResult + ". \n1.Please check your config.\n2.Please check log for more information.\n3.Please ask NicoMico for help, remember to send him the latest log file.\n4.Ask @Developer in ShaderFreedom for help.\n5.Read the source code of DBMT and try analyse the reason for Error with latest log file.");
+                        "Run result: " + runResult + ". \n1.Please check your config.\n2.Please check log for more information.\n3.Please ask NicoMico for help, remember to send him the latest log file.\n4.Ask @Developer in ShaderFreedom for help.\n5.Read the source code of SSMT and try analyse the reason for Error with latest log file.");
                     }
                     return false;
                 }
@@ -121,7 +121,7 @@ namespace SSMT
             }
             catch (Exception ex)
             {
-                _ = SSMTMessageHelper.Show("执行DBMT核心时发生中断，请查看Log日志获取具体内容", "Error when execute DBMT.exe, please see log file for details." + ex.ToString());
+                _ = SSMTMessageHelper.Show("执行SSMT核心时发生中断，请查看Log日志获取具体内容", "Error when execute SSMT.exe, please see log file for details." + ex.ToString());
                 return false;
             }
         }
@@ -283,20 +283,29 @@ namespace SSMT
         {
             FileOpenPicker picker = new FileOpenPicker();
 
-            // 获取当前窗口的HWND
+            // 获取当前窗口的 HWND
             nint windowHandle = WindowNative.GetWindowHandle(App.m_window);
             InitializeWithWindow.Initialize(picker, windowHandle);
 
             picker.ViewMode = PickerViewMode.Thumbnail;
-            
-            //还不如不设置起始位置，让用户跟着上一次的位置去选
-            //picker.SuggestedStartLocation = PickerLocationId.Desktop;
-            
-            picker.FileTypeFilter.Add(Suffix);
+
+            // 💡 支持多个扩展名，例如 ".png;.mp4;.jpg"
+            foreach (var ext in Suffix.Split(';', StringSplitOptions.RemoveEmptyEntries))
+            {
+                string cleanExt = ext.Trim();
+
+                // 确保以 "." 开头并去除通配符
+                if (!cleanExt.StartsWith("."))
+                    cleanExt = "." + cleanExt.TrimStart('*');
+
+                picker.FileTypeFilter.Add(cleanExt);
+            }
+
             return picker;
         }
 
-        
+
+
 
         public static FileOpenPicker Get_FileOpenPicker(List<string> SuffixList)
         {
@@ -344,7 +353,7 @@ namespace SSMT
             }
             catch (Exception exception)
             {
-                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开DBMT。\n" + exception.ToString(), "This functio can't run on admin user please use normal user to open DBMT. \n" + exception.ToString());
+                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开SSMT。\n" + exception.ToString(), "This functio can't run on admin user please use normal user to open SSMT. \n" + exception.ToString());
             }
             return "";
         }
@@ -366,7 +375,7 @@ namespace SSMT
             }
             catch (Exception exception)
             {
-                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开DBMT。\n" + exception.ToString(), "This functio can't run on admin user please use normal user to open DBMT. \n" + exception.ToString());
+                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开SSMT。\n" + exception.ToString(), "This functio can't run on admin user please use normal user to open SSMT. \n" + exception.ToString());
             }
             return "";
         }
@@ -389,7 +398,7 @@ namespace SSMT
             }
             catch (Exception exception)
             {
-                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开DBMT。\n" + exception.ToString());
+                await SSMTMessageHelper.Show("此功能不支持管理员权限运行，请切换到普通用户打开SSMT。\n" + exception.ToString());
             }
             return "";
             
