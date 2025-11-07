@@ -43,9 +43,7 @@ namespace SSMT
 
         public string GameTypeName { get; set; } = "GIMI";
 
-        public bool IgnoreErrorGI25 { get; set; } = false;
 
-        public bool PlayVersionDll { get; set; } = false;
 
         public bool AutoSetAnalyseOptions { get; set; } = true;
 
@@ -115,12 +113,7 @@ namespace SSMT
                     this.GithubPackageVersion = GithubPackageVersion;
                 }
 
-                if (jobj.ContainsKey("PlayVersionDll"))
-                {
-
-                    bool PlayVersionDll = (bool)jobj["PlayVersionDll"];
-                    this.PlayVersionDll = PlayVersionDll;
-                }
+             
 
                 //AutoSetAnalyseOptions
                 if (jobj.ContainsKey("AutoSetAnalyseOptions"))
@@ -130,12 +123,7 @@ namespace SSMT
                     this.AutoSetAnalyseOptions = AutoSetAnalyseOptions;
                 }
 
-                if (jobj.ContainsKey("IgnoreGameError"))
-                {
-
-                    bool IgnoreGameError = (bool)jobj["IgnoreGameError"];
-                    this.IgnoreErrorGI25 = IgnoreGameError;
-                }
+                
 
                 //DllInitializationDelay
                 if (jobj.ContainsKey("DllInitializationDelay"))
@@ -213,15 +201,17 @@ namespace SSMT
             jobj["3DmigotoPath"] = this.MigotoPath;
             jobj["LaunchPath"] = this.LaunchPath;
             jobj["LaunchArgs"] = this.LaunchArgs;
+
             jobj["LogicName"] = this.LogicName;
             jobj["GameTypeName"] = this.GameTypeName;
-            jobj["IgnoreGameError"] = this.IgnoreErrorGI25;
-            jobj["PlayVersionDll"] = this.PlayVersionDll;
+
             jobj["AutoSetAnalyseOptions"] = this.AutoSetAnalyseOptions;
             jobj["GithubPackageVersion"] = this.GithubPackageVersion;
+
             jobj["DllInitializationDelay"] = this.DllInitializationDelay;
             jobj["DllReplaceSelectedIndex"] = this.DllReplaceSelectedIndex;
             jobj["DllPreProcessSelectedIndex"] = this.DllPreProcessSelectedIndex;
+
             jobj["LaunchItems"] = jobjArray;
             DBMTJsonUtils.SaveJObjectToFile(jobj, GlobalConfig.Path_CurrentGameConfigJson);
         }

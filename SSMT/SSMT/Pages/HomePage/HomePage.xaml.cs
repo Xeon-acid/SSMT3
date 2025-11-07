@@ -630,7 +630,7 @@ namespace SSMT
             string MigotoSource47Dll = Path.Combine(GlobalConfig.Path_AssetsFolder, "d3dcompiler_47.dll");
             string MigotoTarget47Dll = Path.Combine(CurrentGame3DmigotoFolder, "d3dcompiler_47.dll");
 
-            if (File.Exists(MigotoSource47Dll))
+            if (File.Exists(MigotoSource47Dll) )
             {
                 File.Copy(MigotoSource47Dll, MigotoTarget47Dll, true);
             }
@@ -860,19 +860,7 @@ namespace SSMT
             gameConfig.SaveConfig();
         }
 
-        //private void ToggleSwitch_IgnoreGIError25_Toggled(object sender, RoutedEventArgs e)
-        //{
-        //    if (IsLoading)
-        //    {
-        //        return;
-        //    }
 
-        //    GameConfig gameConfig = new GameConfig();
-        //    gameConfig.IgnoreErrorGI25 = ToggleSwitch_IgnoreGIError25.IsOn;
-        //    gameConfig.SaveConfig();
-        //}
-
-       
 
         private void Button_CleanGICache_Click(object sender, RoutedEventArgs e)
         {
