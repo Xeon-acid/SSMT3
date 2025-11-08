@@ -339,7 +339,7 @@ namespace SSMT
             ToggleSwitch_AutoSetAnalyseOptions.IsOn = gameConfig.AutoSetAnalyseOptions;
 
             //是否显示防报错按钮
-            if (gameConfig.LogicName == LogicName.GIMI)
+            if (gameConfig.LogicName == LogicName.GIMI )
             {
                 StackPanel_GIError.Visibility = Visibility.Visible;
             }
@@ -885,12 +885,10 @@ namespace SSMT
         {
             try
             {
-
-
                 string IgnoreGIErrorExePath = Path.Combine(GlobalConfig.Path_PluginsFolder, GlobalConfig.GIPluginName);
                 if (!File.Exists(IgnoreGIErrorExePath))
                 {
-                    _ = SSMTMessageHelper.Show("您还没有安装此插件，请联系NicoMico获取并安装此插件。");
+                    _ = SSMTMessageHelper.Show("您还没有安装此插件，请在爱发电上赞助NicoMico的SSMT技术社群方案，加入技术社群获取并安装此插件，您可以在SSMT的设置页面中右侧看到直达赞助链接的按钮。","Not Supported Yet.");
                     return;
                 }
 

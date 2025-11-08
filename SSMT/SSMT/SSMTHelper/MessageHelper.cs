@@ -36,9 +36,17 @@ namespace WinUI3Helper
                         TintOpacity = GlobalConfig.WindowLuminosityOpacity, // 低不透明度
                         FallbackColor = Colors.Transparent
                     },
-                    RequestedTheme = ElementTheme.Dark,
                     XamlRoot = xamlRoot // 确保设置 XamlRoot
                 };
+
+                if (GlobalConfig.Theme)
+                {
+                    subscribeDialog.RequestedTheme = ElementTheme.Dark;
+                }
+                else
+                {
+                    subscribeDialog.RequestedTheme = ElementTheme.Light;
+                }
 
                 ContentDialogResult result = await subscribeDialog.ShowAsync();
 
@@ -70,9 +78,18 @@ namespace WinUI3Helper
                         TintOpacity = GlobalConfig.WindowLuminosityOpacity, // 低不透明度
                         FallbackColor = Colors.Transparent
                     },
-                    RequestedTheme = ElementTheme.Dark,
+                    
                     XamlRoot = xamlRoot // 确保设置 XamlRoot
                 };
+
+                if (GlobalConfig.Theme)
+                {
+                    subscribeDialog.RequestedTheme = ElementTheme.Dark;
+                }
+                else
+                {
+                    subscribeDialog.RequestedTheme = ElementTheme.Light;
+                }
 
                 ContentDialogResult result = await subscribeDialog.ShowAsync();
                 return true;

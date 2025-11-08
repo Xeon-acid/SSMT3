@@ -441,8 +441,7 @@ The following sets the maximum # of items to show before wrapping.-->
                             <Expander.Header>
                                 <StackPanel Margin="10">
                                     <TextBlock 
-                                        ToolTipService.ToolTip="清理本地缓存日志，以避免由于缓存日志导致标记重点扫描从而更容易出现【与服务器的连接已断开】的问题"
-                                        Text="某游戏Mod防报错措施" 
+                                        x:Name="TextBlock_ClearGICache"
                                         FontSize="14" 
                                         FontWeight="Bold" />
                                 </StackPanel>
@@ -452,15 +451,13 @@ The following sets the maximum # of items to show before wrapping.-->
                                 <Button
                                    Click="Button_CleanGICache_Click"
                                    x:Name="Button_CleanGICache"
-                                   Margin="5"
-                                   Content="清理缓存日志"></Button>
+                                   Margin="5"/>
 
                                 <Button
-                                    ToolTipService.ToolTip="开启后，使用SSMT启动游戏使用Mod将可以避免由于Mod导致的网络卡顿而出现的【与服务器的连接已断开】错误弹窗"
                                     Click="Button_RunIgnoreGIError40_Click"
                                     x:Name="Button_RunIgnoreGIError40"
                                     Margin="5"
-                                    Content="启动第四代防报错技术: 网络加固插件"></Button>
+                                    ></Button>
 
                                 
                             </StackPanel>

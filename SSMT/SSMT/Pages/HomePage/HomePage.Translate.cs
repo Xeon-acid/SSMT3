@@ -102,6 +102,15 @@ namespace SSMT
                 ComboBoxItem_DllReplace_Dev.Content = "替换为Dev版本d3d11.dll";
                 ComboBoxItem_DllReplace_Play.Content = "替换为Play版本d3d11.dll";
                 ComboBoxItem_DllReplace_None.Content = "不进行任何替换";
+
+                TextBlock_ClearGICache.Text = "Mod防报错措施";
+                ToolTipService.SetToolTip(TextBlock_ClearGICache, "清理本地缓存日志，以避免由于缓存日志导致标记重点扫描从而更容易出现【与服务器的连接已断开】【15-4001】【10612-4001】的问题");
+
+                Button_CleanGICache.Content = "清理GI缓存日志";
+
+                ToolTipService.SetToolTip(Button_RunIgnoreGIError40, "开启后，使用SSMT启动游戏使用Mod将可以避免由于Mod导致的网络卡顿而出现的【与服务器的连接已断开】错误弹窗");
+                Button_RunIgnoreGIError40.Content = "启动第四代Mod防报错技术: 网络加固插件";
+
             }
             else
             {
@@ -174,6 +183,11 @@ namespace SSMT
                 ComboBoxItem_DllReplace_Play.Content = "Replace with Play version d3d11.dll";
                 ComboBoxItem_DllReplace_None.Content = "Not Replace";
 
+                TextBlock_ClearGICache.Text = "Ignore Error Code";
+
+                Button_CleanGICache.Content = "Clean GI Log Cache Files";
+
+                Button_RunIgnoreGIError40.Content = "Run GoodWorkGI.exe";
             }
         }
 
