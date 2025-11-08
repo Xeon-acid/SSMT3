@@ -57,7 +57,7 @@ namespace SSMT
             {
                 Center = center,
                 RadiusX = 200,
-                RadiusY = 50
+                RadiusY = 0
             };
         }
 
@@ -129,16 +129,7 @@ namespace SSMT
             InitializeGameNameList();
 
 
-            //是否显示防报错按钮
-            string IgnoreGIErrorExePath = Path.Combine(GlobalConfig.Path_PluginsFolder, GlobalConfig.GIPluginName);
-            if (!File.Exists(IgnoreGIErrorExePath))
-            {
-                StackPanel_GIError.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                StackPanel_GIError.Visibility = Visibility.Visible;
-            }
+            
 
             GameNameChanged(GlobalConfig.CurrentGameName);
 
@@ -346,6 +337,16 @@ namespace SSMT
             ComboBox_DllReplace.SelectedIndex = gameConfig.DllReplaceSelectedIndex;
 
             ToggleSwitch_AutoSetAnalyseOptions.IsOn = gameConfig.AutoSetAnalyseOptions;
+
+            //是否显示防报错按钮
+            if (gameConfig.LogicName == LogicName.GIMI)
+            {
+                StackPanel_GIError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                StackPanel_GIError.Visibility = Visibility.Collapsed;
+            }
 
 
             SelectGameIconToCurrentGame();
