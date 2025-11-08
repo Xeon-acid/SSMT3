@@ -1,0 +1,20 @@
+{
+  "GameIconSettingList": [
+    {
+      "GameName": "GIMI",
+      "Show": true
+    },
+    {
+      "GameName": "HIMI",
+      "Show": true
+    },
+    {
+      "GameName": "SRMI",
+      "Show": true
+    },
+    {
+      "GameName": "ZZMI",
+      "Show": true
+    }
+  ]
+}

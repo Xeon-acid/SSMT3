@@ -313,7 +313,7 @@ namespace SSMT
             get { return Path.Combine(Path_TextureConfigsFolder, GlobalConfig.CurrentGameName + "\\"); }
         }
 
-      
+        
 
         public static string Path_PluginsFolder
         {
@@ -501,7 +501,7 @@ namespace SSMT
 
         public static string Path_TexturePageIndexConfig
         {
-            get { return Path.Combine(GlobalConfig.Path_ConfigsFolder, "TexturePageIndexConfig.json"); }
+            get { return Path.Combine(GlobalConfig.Path_SSMT3GlobalConfigsFolder, "TexturePageIndexConfig.json"); }
         }
 
    
