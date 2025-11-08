@@ -51,6 +51,7 @@ namespace SSMT
 
             this.InitializeComponent();
 
+            
 
             CurrentWindow = this;
 
@@ -268,19 +269,14 @@ namespace SSMT
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            //保存窗口大小
-            int WindowWidth = App.m_window.AppWindow.Size.Width;
-            int WindowHeight = App.m_window.AppWindow.Size.Height;
-            GlobalConfig.WindowWidth = WindowWidth;
-            GlobalConfig.WindowHeight = WindowHeight;
-
-
-            //关闭之前跳转到主页，触发Setting界面的界面切换方法从而保存设置中的内容。
-            contentFrame.Navigate(typeof(HomePage));
-
+            //退出程序时，保存窗口大小
+            GlobalConfig.WindowWidth = App.m_window.AppWindow.Size.Width;
+            GlobalConfig.WindowHeight = App.m_window.AppWindow.Size.Height;
             GlobalConfig.SaveConfig();
 
-
+            //TODO 清理3Dmigoto文件夹下的帧分析文件，不应该在这里进行
+            //应该交给用户自己清理，提供清理按钮
+            //不然关闭程序时，窗口会卡顿，然后这个卡顿，用户就体验非常差
             if (GlobalConfig.AutoCleanFrameAnalysisFolder)
             {
                 DBMTFileUtils.CleanFrameAnalysisFiles(GlobalConfig.Path_3DmigotoLoaderFolder,GlobalConfig.FrameAnalysisFolderReserveNumber);

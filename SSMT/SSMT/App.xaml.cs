@@ -36,6 +36,7 @@ namespace SSMT
         {
             this.InitializeComponent();
 
+            
             VelopackApp.Build().Run();
         }
 
@@ -69,6 +70,8 @@ namespace SSMT
                 }
             }
         }
+
+       
 
     }
 }

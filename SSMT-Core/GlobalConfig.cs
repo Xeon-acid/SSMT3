@@ -198,29 +198,38 @@ namespace SSMT
         /// </summary>
         public static void SaveConfig()
         {
-            //古法保存
-            JObject SettingsJsonObject = new JObject();
+            try
+            {
+                //古法保存
+                JObject SettingsJsonObject = new JObject();
 
-            SettingsJsonObject["CurrentGameName"] = CurrentGameName;
-            SettingsJsonObject["CurrentWorkSpace"] = CurrentWorkSpace;
-            SettingsJsonObject["DBMTWorkFolder"] = SSMTCacheFolderPath;
-            SettingsJsonObject["WindowWidth"] = WindowWidth;
-            SettingsJsonObject["WindowHeight"] = WindowHeight;
-            SettingsJsonObject["AutoCleanFrameAnalysisFolder"] = AutoCleanFrameAnalysisFolder;
-            SettingsJsonObject["FrameAnalysisFolderReserveNumber"] = FrameAnalysisFolderReserveNumber;
-            SettingsJsonObject["WindowLuminosityOpacity"] = WindowLuminosityOpacity;
-            SettingsJsonObject["OpenToWorkPage"] = OpenToWorkPage;
-            SettingsJsonObject["Theme"] = Theme;
-            SettingsJsonObject["Chinese"] = Chinese;
-            SettingsJsonObject["ShowGameTypePage"] = ShowGameTypePage;
-            SettingsJsonObject["ShowModManagePage"] = ShowModManagePage;
-            SettingsJsonObject["ShowTextureToolBoxPage"] = ShowTextureToolBoxPage;
+                SettingsJsonObject["CurrentGameName"] = CurrentGameName;
+                SettingsJsonObject["CurrentWorkSpace"] = CurrentWorkSpace;
+                SettingsJsonObject["DBMTWorkFolder"] = SSMTCacheFolderPath;
+                SettingsJsonObject["WindowWidth"] = WindowWidth;
+                SettingsJsonObject["WindowHeight"] = WindowHeight;
+                SettingsJsonObject["AutoCleanFrameAnalysisFolder"] = AutoCleanFrameAnalysisFolder;
+                SettingsJsonObject["FrameAnalysisFolderReserveNumber"] = FrameAnalysisFolderReserveNumber;
+                SettingsJsonObject["WindowLuminosityOpacity"] = WindowLuminosityOpacity;
+                SettingsJsonObject["OpenToWorkPage"] = OpenToWorkPage;
+                SettingsJsonObject["Theme"] = Theme;
+                SettingsJsonObject["Chinese"] = Chinese;
+                SettingsJsonObject["ShowGameTypePage"] = ShowGameTypePage;
+                SettingsJsonObject["ShowModManagePage"] = ShowModManagePage;
+                SettingsJsonObject["ShowTextureToolBoxPage"] = ShowTextureToolBoxPage;
 
-            //写出内容
-            string WirteStirng = SettingsJsonObject.ToString();
+                //写出内容
+                string WirteStirng = SettingsJsonObject.ToString();
 
-            //保存配置时，全局配置也顺便保存一份
-            File.WriteAllText(Path_MainConfig_Global, WirteStirng);
+                //保存配置时，全局配置也顺便保存一份
+                File.WriteAllText(Path_MainConfig_Global, WirteStirng);
+            }
+            catch (Exception ex)
+            {
+                //保存失败就算了，也不是非得保存不可。
+                //很难想象没法在AppData\\Local下面写文件的情况会发生。
+                ex.ToString();
+            }
         }
 
 
