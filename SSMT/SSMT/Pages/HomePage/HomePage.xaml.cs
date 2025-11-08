@@ -1,7 +1,11 @@
-﻿using Microsoft.UI.Composition;
+﻿using Microsoft.Graphics.Canvas.Brushes;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Newtonsoft.Json.Linq;
 using SSMT.SSMTHelper;
@@ -12,8 +16,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using WinUI3Helper;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,12 +38,77 @@ namespace SSMT
         private Visual imageVisual;
         private bool IsLoading = false;
 
+
+        private float glowIntensity = 0f; // 光晕强度
+        private CanvasRadialGradientBrush? glowBrush;
+
+
         public HomePage()
         {
             this.InitializeComponent();
             this.Loaded += HomePageLoaded;
+
+            
+        }
+        private void GlowCanvas_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+        {
+            var center = new Vector2((float)sender.ActualWidth / 2, (float)sender.ActualHeight / 2);
+            glowBrush = new CanvasRadialGradientBrush(sender, Colors.Cyan, Colors.Transparent)
+            {
+                Center = center,
+                RadiusX = 200,
+                RadiusY = 50
+            };
         }
 
+        private void GlowCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            var session = args.DrawingSession;
+            var center = new Vector2((float)sender.ActualWidth / 2, (float)sender.ActualHeight / 2);
+
+            byte alpha = (byte)(glowIntensity * 255);
+
+            // 获取系统强调色
+            var uiSettings = new UISettings();
+            var accent = uiSettings.GetColorValue(UIColorType.Accent);
+
+            var stops = new CanvasGradientStop[]
+            {
+                new CanvasGradientStop() { Color = Color.FromArgb(alpha, accent.R, accent.G, accent.B), Position = 0f },
+                new CanvasGradientStop() { Color = Colors.Transparent, Position = 1f }
+            };
+
+            using var brush = new CanvasRadialGradientBrush(sender, stops)
+            {
+                Center = center,
+                RadiusX = 200,
+                RadiusY = 50
+            };
+
+            session.FillEllipse(center, 200, 50, brush);
+        }
+
+        private async void GlowButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            // 动画增加发光
+            for (float i = 0f; i <= 1f; i += 0.05f)
+            {
+                glowIntensity = i;
+                GlowCanvas.Invalidate(); // 重绘
+                await Task.Delay(16);
+            }
+        }
+
+        private async void GlowButton_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            // 动画减少发光
+            for (float i = 1f; i >= 0f; i -= 0.05f)
+            {
+                glowIntensity = i;
+                GlowCanvas.Invalidate();
+                await Task.Delay(16);
+            }
+        }
 
         private void HomePageLoaded(object sender, RoutedEventArgs e)
         {

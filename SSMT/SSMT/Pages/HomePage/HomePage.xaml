@@ -493,22 +493,40 @@ The following sets the maximum # of items to show before wrapping.-->
                 <StackPanel Orientation="Horizontal">
 
                     <StackPanel Orientation="Vertical">
-                        <Border
-                            CornerRadius="25"
-                            Width="Auto"
-                            Margin="5"
-                            BorderThickness="2"
-                            BorderBrush="White"
-                            >
-                            <Button 
-                                BorderThickness="0"
-                                x:Name="Button_Run3DmigotoLoader" 
-                                Width="200"
-                                MinHeight="50"
-                                FontSize="21"
-                                FontWeight="Bold"
-                                Click="Open3DmigotoLoaderExe"/>
-                        </Border>
+                        <Grid>
+                            
+
+                            <Border
+                                CornerRadius="25"
+                                Width="Auto"
+                                Margin="5"
+                                BorderThickness="2"
+                                BorderBrush="White"
+                                >
+
+                                <Grid>
+                                    <!-- Glow 层 -->
+                                    <canvas:CanvasControl x:Name="GlowCanvas"
+                                        Width="200" MinHeight="50"
+                                        ClearColor="Transparent"
+                                        CreateResources="GlowCanvas_CreateResources"
+                                        Draw="GlowCanvas_Draw"/>
+                                    <Button 
+                                        BorderThickness="0"
+                                        x:Name="Button_Run3DmigotoLoader" 
+                                        Width="200"
+                                        MinHeight="50"
+                                        FontSize="21"
+                                        FontWeight="Bold"
+                                        PointerExited="GlowButton_PointerExited"
+                                        PointerEntered="GlowButton_PointerEntered"
+                                        Click="Open3DmigotoLoaderExe"/>
+                                </Grid>
+
+                                
+                            </Border>
+                        </Grid>
+                        
                         <Border
                             CornerRadius="25"
                             Width="Auto"
