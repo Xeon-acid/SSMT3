@@ -26,13 +26,13 @@ namespace SSMT
         public static string CurrentGameName { get; set; } = "ZZZ";
         public static string CurrentWorkSpace { get; set; } = "";
         public static string SSMTCacheFolderPath { get; set; } = "";
-        public static bool Theme { get; set; } = true;
+        public static bool Theme { get; set; } = false;
         public static bool Chinese { get; set; } = true;
 
         //窗口大小
         public static double WindowWidth { get; set; } = 1280;
         public static double WindowHeight { get; set; } = 720;
-        public static double WindowLuminosityOpacity { get; set; } = 0.65f;
+        public static double WindowLuminosityOpacity { get; set; } = 1.0f;
 
 
         /// <summary>
