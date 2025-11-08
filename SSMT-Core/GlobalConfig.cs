@@ -295,7 +295,7 @@ namespace SSMT
 
         public static string Path_TextureConfigsFolder
         {
-            get { return Path.Combine(Path_ConfigsFolder, "TextureConfigs\\"); }
+            get { return Path.Combine(Path_SSMT3GlobalConfigsFolder, "TextureConfigs\\"); }
         }
 
         public static string Path_GameTypeConfigsFolder
