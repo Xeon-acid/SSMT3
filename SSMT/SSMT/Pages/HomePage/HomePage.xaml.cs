@@ -685,17 +685,24 @@ namespace SSMT
 
             string MigotoSource47Dll = Path.Combine(PathManager.Path_AssetsFolder, "d3dcompiler_47.dll");
             string MigotoTarget47Dll = Path.Combine(CurrentGame3DmigotoFolder, "d3dcompiler_47.dll");
+			string MigotoSource46Dll = Path.Combine(PathManager.Path_AssetsFolder, "d3dcompiler_46.dll");
+			string MigotoTarget46Dll = Path.Combine(CurrentGame3DmigotoFolder, "d3dcompiler_46.dll");
 
-            if (File.Exists(MigotoSource47Dll) )
+			//文件不存在时才复制过去，不然他娘滴这个文件经常被占用，然后SSMT就会复制失败闪退
+			if (File.Exists(MigotoSource47Dll) )
             {
-                File.Copy(MigotoSource47Dll, MigotoTarget47Dll, true);
-            }
-            else
+                if (!File.Exists(MigotoTarget47Dll)) {
+                    File.Copy(MigotoSource47Dll, MigotoTarget47Dll, true);
+				}
+
+			}
+            else if(File.Exists(MigotoSource46Dll))
             {
-                string MigotoSource46Dll = Path.Combine(PathManager.Path_AssetsFolder, "d3dcompiler_46.dll");
-                string MigotoTarget46Dll = Path.Combine(CurrentGame3DmigotoFolder, "d3dcompiler_46.dll");
-                File.Copy(MigotoSource46Dll, MigotoTarget46Dll, true);
-            }
+                if (!File.Exists(MigotoTarget46Dll)) {
+					File.Copy(MigotoSource46Dll, MigotoTarget46Dll, true);
+
+				}
+			}
         }
 
 
