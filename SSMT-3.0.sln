@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSMT", "SSMT\SSMT\SSMT.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSMT-Core", "SSMT-Core\SSMT-Core.csproj", "{97E0E050-161D-41BC-B43A-5AF514A2361A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3Dmigoto-Injector-V2", "3Dmigoto-Injector-V2\3Dmigoto-Injector-V2.vcxproj", "{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -41,6 +43,18 @@ Global
 		{97E0E050-161D-41BC-B43A-5AF514A2361A}.Release|x64.Build.0 = Release|Any CPU
 		{97E0E050-161D-41BC-B43A-5AF514A2361A}.Release|x86.ActiveCfg = Release|Any CPU
 		{97E0E050-161D-41BC-B43A-5AF514A2361A}.Release|x86.Build.0 = Release|Any CPU
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|ARM64.ActiveCfg = Debug|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|ARM64.Build.0 = Debug|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|x64.ActiveCfg = Debug|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|x64.Build.0 = Debug|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|x86.ActiveCfg = Debug|Win32
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Debug|x86.Build.0 = Debug|Win32
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|ARM64.ActiveCfg = Release|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|ARM64.Build.0 = Release|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|x64.ActiveCfg = Release|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|x64.Build.0 = Release|x64
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|x86.ActiveCfg = Release|Win32
+		{FD85EA29-988F-4A1C-B1BF-FABEA5444A4C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
