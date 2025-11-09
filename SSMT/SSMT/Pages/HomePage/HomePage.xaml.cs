@@ -1,4 +1,5 @@
-﻿using Microsoft.Graphics.Canvas.Brushes;
+﻿using CommunityToolkit.WinUI.Behaviors;
+using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
 using Microsoft.UI.Composition;
@@ -163,7 +164,9 @@ namespace SSMT
 
         private void GameNameChanged(string ChangeToGameName)
         {
-            GlobalConfig.CurrentGameName = ChangeToGameName;
+			NotificationQueue.Clear();
+
+			GlobalConfig.CurrentGameName = ChangeToGameName;
             GlobalConfig.SaveConfig();
 
             string folder = PathManager.Path_CurrentGamesFolder;
@@ -224,7 +227,7 @@ namespace SSMT
             InitializePanel();
             ReadConfigsToPanel();
 
-            
+
 
             //判断当前3Dmigoto目录是否存在，如果不存在则默认设置为SSMT缓存文件夹中的3Dmigoto目录
             if (TextBox_3DmigotoPath.Text.Trim() == "" || !Directory.Exists(TextBox_3DmigotoPath.Text.Trim()))
@@ -245,8 +248,25 @@ namespace SSMT
                     InstallBasicDllFileTo3DmigotoFolder();
                 }
             }
+            else {
+                string d3dxIniPath = Path.Combine(TextBox_3DmigotoPath.Text.Trim(), "d3dx.ini");
+                if (!File.Exists(d3dxIniPath)) {
+                    var notification = new Notification
+                    {
+                        Title = "Tips",
+                        Message = "您当前游戏: " + GlobalConfig.CurrentGameName+ " 的3Dmigoto目录下还没有对应的Package文件，请点击【从Github检查更新并自动下载最新3Dmigoto加载器包】来自动下载更新",
+                        Severity = InfoBarSeverity.Warning
+                    };
 
-            InitializeToggleConfig();
+                    //我去，这里指定持续时间会导致报错，全是BUG啊这WinUI3
+                    //暂时只能无限时间显示了。
+                    NotificationQueue.Show(notification);
+				}
+            }
+
+
+
+                InitializeToggleConfig();
 
             IsLoading = true;
 

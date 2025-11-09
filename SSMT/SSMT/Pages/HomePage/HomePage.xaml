@@ -12,9 +12,16 @@
     xmlns:s="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+
     CacheMode="BitmapCache"
     Background="Transparent"
     >
+    
+    <!--WinUI3所有的东西都在CommunityToolkit里，
+    然后也没有一个可靠的文档来告诉萌新在哪里可以获取，
+    只有几个很久都不更新的Gallary程序勉强能参考-->
 
     <Grid >
         <!-- 定义行 -->
@@ -51,6 +58,20 @@
                 <ScaleTransform />
             </Image.RenderTransform>
         </Image>
+
+      
+
+
+        <InfoBar
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Margin="5"
+            >
+            <interactivity:Interaction.Behaviors>
+                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
+            </interactivity:Interaction.Behaviors>
+        </InfoBar>
 
         <!--游戏图标列表-->
         <GridView
