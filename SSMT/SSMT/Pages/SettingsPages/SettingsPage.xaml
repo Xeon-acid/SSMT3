@@ -65,48 +65,7 @@
                 </Expander>
 
 
-                <Expander
-                    HorizontalContentAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Margin="10">
-                            <TextBlock 
-                                x:Name="TextBlock_OpenToWorkPage"
-                                FontSize="14" 
-                                FontWeight="Bold" />
-
-                        </StackPanel>
-                    </Expander.Header>
-
-                    <ToggleSwitch 
-                        HorizontalAlignment="Stretch" 
-                        VerticalAlignment="Center" 
-                        x:Name="ToggleSwitch_OpenToWorkPage" 
-                        Toggled="RefreshSettings"/>
-                </Expander>
-
-                <Expander
-                    HorizontalContentAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Margin="10">
-                            <TextBlock 
-                                x:Name="TextBlock_Theme"
-                                FontSize="14" 
-                                FontWeight="Bold" 
-                                />
-                        </StackPanel>
-                    </Expander.Header>
-                    <ToggleSwitch 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Stretch" 
-                        x:Name="ToggleSwitch_Theme"
-                        Toggled="ToggleSwitch_Theme_Toggled"
-                        />
-                </Expander>
-
+         
 
 
                
@@ -137,26 +96,7 @@
                     </StackPanel>
 
                 </Expander>
-                <Expander
-                    HorizontalContentAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Margin="10">
-                            <TextBlock 
-                                x:Name="TextBlock_Language"
-                                FontSize="14" 
-                                FontWeight="Bold" 
-                                />
-                        </StackPanel>
-                    </Expander.Header>
-                    <ToggleSwitch 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Stretch" 
-                        x:Name="ToggleSwitch_Chinese"
-                        Toggled="ToggleSwitch_Chinese_Toggled"
-                        />
-                </Expander>
+             
 
                 <Expander
                     HorizontalContentAlignment="Stretch"
@@ -195,6 +135,41 @@
                     </StackPanel>
 
                 </Expander>
+
+              
+
+                <controls:SettingsCard x:Name="SettingsCard_Language">
+                    <!-- 这里换成你查到的编码 -->
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xf2b7;"     
+                            FontFamily="Segoe Fluent Icons"/>
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Stretch" 
+                        x:Name="ToggleSwitch_Chinese"
+                        Toggled="ToggleSwitch_Chinese_Toggled"
+                        />
+
+                </controls:SettingsCard>
+
+                <controls:SettingsCard x:Name="SettingsCard_Theme">
+                    <!-- 这里换成你查到的编码 -->
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xe793;"     
+                        FontFamily="Segoe Fluent Icons"/>
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Stretch" 
+                        x:Name="ToggleSwitch_Theme"
+                        Toggled="ToggleSwitch_Theme_Toggled"
+                        />
+
+
+                </controls:SettingsCard>
 
             </StackPanel>
         </ScrollViewer>

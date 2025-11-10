@@ -62,16 +62,6 @@
       
 
 
-        <InfoBar
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Margin="5"
-            >
-            <interactivity:Interaction.Behaviors>
-                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
-            </interactivity:Interaction.Behaviors>
-        </InfoBar>
 
         <!--游戏图标列表-->
         <GridView
@@ -363,168 +353,166 @@ The following sets the maximum # of items to show before wrapping.-->
                         </StackPanel>
 
                     </Expander>
-
-
-                    <controls:SettingsExpander 
-                        x:Name="SettingsExpander_DllRelatedSettings"
-                        IsExpanded="True"
-                        VerticalAlignment="Top">
-
-                        <controls:SettingsExpander.Items>
-                            <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xf19d;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
+                    
+                        <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xf19d;"     
+                                    FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
 
                             
 
-                                <ComboBox x:Name="ComboBox_ShowWarning" SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
-                                    <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
-                                    <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
-                                </ComboBox>
+                            <ComboBox x:Name="ComboBox_ShowWarning" SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
+                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
+                            </ComboBox>
 
 
-                            </controls:SettingsCard>
+                        </controls:SettingsCard>
 
-                            <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xe71b;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xe71b;"     
+                                    FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
 
                                 
 
-                                <ComboBox 
-                                    SelectionChanged="ComboBox_Symlink_SelectionChanged"
-                                    x:Name="ComboBox_Symlink">
-                                    <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
-                                    <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
-                                </ComboBox>
+                            <ComboBox 
+                                SelectionChanged="ComboBox_Symlink_SelectionChanged"
+                                x:Name="ComboBox_Symlink">
+                                <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
+                            </ComboBox>
 
 
-                            </controls:SettingsCard>
+                        </controls:SettingsCard>
 
-                            <controls:SettingsCard 
-                                x:Name="SettingsCard_DllReplace"
-                                Description=""
-                                Header="">
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xEfa5;" FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard 
+                            x:Name="SettingsCard_DllReplace"
+                            Description=""
+                            Header="">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xEfa5;" FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
 
-                                <ComboBox 
-                                    SelectionChanged="ComboBox_DllReplace_SelectionChanged"
-                                    x:Name="ComboBox_DllReplace" 
-                                    >
-                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev" />
-                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play" />
-                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None" />
-                                </ComboBox>
-
-
-                            </controls:SettingsCard>
+                            <ComboBox 
+                                SelectionChanged="ComboBox_DllReplace_SelectionChanged"
+                                x:Name="ComboBox_DllReplace" 
+                                >
+                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev" />
+                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play" />
+                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None" />
+                            </ComboBox>
 
 
-                            <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
-
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xE745;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
-
-                                <ComboBox 
-                                    SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
-                                    
-                                    x:Name="ComboBox_DllPreProcess">
-                                    <ComboBoxItem x:Name="ComboBox_DllPreProcess_None" />
-                                    <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX" />
-                                </ComboBox>
-
-                            </controls:SettingsCard>
-
-                            <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xe964;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
 
 
-                                <NumberBox 
-                                    Margin="5"
-                                    SmallChange="10"
-                                    LargeChange="100"
-                                    x:Name="NumberBox_DllInitializationDelay"
-                                    LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
+                        <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
 
-                            </controls:SettingsCard>
-
-                            <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xe736;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
-
-
-                                <ComboBox 
-                                    SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
-                                    x:Name="ComboBox_AutoSetAnalyseOptions">
-                                    <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
-                                    <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
-                                </ComboBox>
-
-
-                            </controls:SettingsCard>
-
-
-                            <controls:SettingsCard 
-                                x:Name="SettingsCard_ClearGICache">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xed62;"     
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE745;"     
                                     FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
+                            </controls:SettingsCard.HeaderIcon>
 
-                                <Button
-                                    Click="Button_CleanGICache_Click"
-                                    x:Name="Button_CleanGICache"
-                                    Margin="5"/>
+                            <ComboBox 
+                                SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
+                                    
+                                x:Name="ComboBox_DllPreProcess">
+                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_None" />
+                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX" />
+                            </ComboBox>
 
-                            </controls:SettingsCard>
+                        </controls:SettingsCard>
 
-                            <controls:SettingsCard 
-                                x:Name="SettingsCard_RunIgnoreGIError40">
-                                <!-- 这里换成你查到的编码 -->
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xea0d;"     
-                                        FontFamily="Segoe Fluent Icons"/>
-                                </controls:SettingsCard.HeaderIcon>
-
+                        <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xe964;"     
+                                    FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
 
 
-                                <Button
-                                    Click="Button_RunIgnoreGIError40_Click"
-                                    x:Name="Button_RunIgnoreGIError40"
-                                    Margin="5"
-                                    ></Button>
+                            <NumberBox 
+                                Margin="5"
+                                SmallChange="10"
+                                LargeChange="100"
+                                x:Name="NumberBox_DllInitializationDelay"
+                                LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
 
-                            </controls:SettingsCard>
+                        </controls:SettingsCard>
 
-                        </controls:SettingsExpander.Items>
-                    </controls:SettingsExpander>
+                        <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xe736;"     
+                                    FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
 
-                    
-                   
+
+                            <ComboBox 
+                                SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
+                                x:Name="ComboBox_AutoSetAnalyseOptions">
+                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
+                            </ComboBox>
+
+
+                        </controls:SettingsCard>
+
+
+                        <controls:SettingsCard 
+                            x:Name="SettingsCard_ClearGICache">
+                            <!-- 这里换成你查到的编码 -->
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xed62;"     
+                                FontFamily="Segoe Fluent Icons"/>
+                            </controls:SettingsCard.HeaderIcon>
+
+                            <Button
+                                Click="Button_CleanGICache_Click"
+                                x:Name="Button_CleanGICache"
+                                Margin="5"/>
+
+                        </controls:SettingsCard>
+
+                    <controls:SettingsCard 
+                            x:Name="SettingsCard_RunIgnoreGIError40">
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xea0d;"     
+                                    FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+
+
+                        <Button
+                            Click="Button_RunIgnoreGIError40_Click"
+                            x:Name="Button_RunIgnoreGIError40"
+                            Margin="5"
+                            ></Button>
+
+                    </controls:SettingsCard>
+
                 </StackPanel>
             </ScrollViewer>
         </Border>
-   
-        
+
+        <!--InforBar放在这里是因为通知必须一直显示在最上面，否则会被配置界面挡住-->
+        <InfoBar
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Margin="5"
+            >
+            <interactivity:Interaction.Behaviors>
+                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
+            </interactivity:Interaction.Behaviors>
+        </InfoBar>
         <!--一键启动按钮和设置按钮-->
         <StackPanel
             Grid.Column="0"

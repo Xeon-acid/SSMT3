@@ -28,10 +28,6 @@ namespace SSMT
         public static double WindowLuminosityOpacity { get; set; } = 1.0f;
 
 
-        /// <summary>
-        /// 打开页面后跳转到工作台页面
-        /// </summary>
-        public static bool OpenToWorkPage { get; set; } = false;
 
         /// <summary>
         /// 是否显示数据类型管理页面
@@ -102,11 +98,7 @@ namespace SSMT
 
 
 
-                    //OpenToWorkPage
-                    if (SettingsJsonObject.ContainsKey("OpenToWorkPage"))
-                    {
-                        OpenToWorkPage = (bool)SettingsJsonObject["OpenToWorkPage"];
-                    }
+              
 
                     if (SettingsJsonObject.ContainsKey("Theme"))
                     {
@@ -165,7 +157,6 @@ namespace SSMT
                 SettingsJsonObject["WindowWidth"] = WindowWidth;
                 SettingsJsonObject["WindowHeight"] = WindowHeight;
                 SettingsJsonObject["WindowLuminosityOpacity"] = WindowLuminosityOpacity;
-                SettingsJsonObject["OpenToWorkPage"] = OpenToWorkPage;
                 SettingsJsonObject["Theme"] = Theme;
                 SettingsJsonObject["Chinese"] = Chinese;
                 SettingsJsonObject["ShowGameTypePage"] = ShowGameTypePage;

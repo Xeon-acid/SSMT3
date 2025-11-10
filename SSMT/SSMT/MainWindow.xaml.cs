@@ -137,28 +137,9 @@ namespace SSMT
 
 
             //默认选中主页界面
-            if (nvSample.MenuItems.Count > 0)
-            {
-                //一开始就设为透明的
-                if (PathManager.CurrentGameMigotoFolder != "" && Directory.Exists(PathManager.CurrentGameMigotoFolder))
-                {
-                    if (GlobalConfig.OpenToWorkPage)
-                    {
-                        contentFrame.Navigate(typeof(WorkPage));
-                    }
-                    else
-                    {
-                        contentFrame.Navigate(typeof(HomePage));
-                    }
-                }
-                else
-                {
-                    contentFrame.Navigate(typeof(HomePage));
-                }
+            contentFrame.Navigate(typeof(HomePage));
 
-            }
 
-            
 
             //设置页面是否显示
             this.SetGameTypePageVisibility(GlobalConfig.ShowGameTypePage);

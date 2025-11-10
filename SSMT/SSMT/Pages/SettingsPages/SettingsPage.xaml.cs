@@ -67,7 +67,6 @@ namespace SSMT
 
                 GlobalConfig.WindowLuminosityOpacity = Slider_LuminosityOpacity.Value;
 
-                GlobalConfig.OpenToWorkPage = ToggleSwitch_OpenToWorkPage.IsOn;
                 GlobalConfig.Chinese = ToggleSwitch_Chinese.IsOn;
                 GlobalConfig.Theme = ToggleSwitch_Theme.IsOn;
 
@@ -96,7 +95,6 @@ namespace SSMT
 
             Slider_LuminosityOpacity.Value = GlobalConfig.WindowLuminosityOpacity;
 
-            ToggleSwitch_OpenToWorkPage.IsOn = GlobalConfig.OpenToWorkPage;
             ToggleSwitch_Theme.IsOn = GlobalConfig.Theme;
             ToggleSwitch_Chinese.IsOn = GlobalConfig.Chinese;
 

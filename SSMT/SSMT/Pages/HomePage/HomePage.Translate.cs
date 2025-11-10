@@ -81,7 +81,7 @@ namespace SSMT
                 SettingsCard_ShowWarnings.Header = "左上角红字报错显示";
                 SettingsCard_ShowWarnings.Description = "开启后将在游戏左上角显示3Dmigoto的红色报错信息，方便Mod作者调试和排查问题，仅使用Mod的Mod玩家用户推荐关闭";
 
-                ComboBoxItem_ShowWarning_On.Content = "启用";
+                ComboBoxItem_ShowWarning_On.Content = "开启";
                 ComboBoxItem_ShowWarning_Off.Content = "关闭";
 
 
@@ -95,8 +95,6 @@ namespace SSMT
                 SettingsCard_DllInitializationDelay.Header = "d3d11.dll初始化延迟";
                 SettingsCard_DllInitializationDelay.Description = "d3d11.dll初始化时的延迟，单位为毫秒，一般WWMI填200，若仍然闪退则以每次100为单位增加此值直到不闪退，鸣潮在2.4版本更新后至少需要50ms的延迟以确保启动时不会闪退。此外，如果要让Reshade和3Dmigoto一起使用，至少需要150ms的延迟";
 
-                SettingsExpander_DllRelatedSettings.Header = "高级选项设置";
-                SettingsExpander_DllRelatedSettings.Description = "进阶功能选项，如非必要无需更改";
 
                 SettingsCard_DllPreProcess.Header = "DLL预处理";
                 SettingsCard_DllPreProcess.Description = "在启动3Dmigoto加载器之前对d3d11.dll进行预处理的选项";
@@ -188,10 +186,6 @@ namespace SSMT
 
                 SettingsCard_DllInitializationDelay.Header = "d3d11.dll Initialization Delay";
                 SettingsCard_DllInitializationDelay.Description = "Delay in milliseconds for DLL initialization. We'll go with 200ms for WWMI:\nWuthering Waves requires at least 50ms delay since 2.4 update to not crash on startup.\nAlso, to inject Reshade along with 3dmigoto, 150ms delay is required.";
-
-
-                SettingsExpander_DllRelatedSettings.Header = "High Level Settings";
-                SettingsExpander_DllRelatedSettings.Description = "Various High Level Settings,Don't Modifiy if you don't know how they work";
 
                 SettingsCard_DllPreProcess.Header = "DLL Pre-Process";
                 SettingsCard_DllPreProcess.Description = "Do something for d3d11.dll before inject";
