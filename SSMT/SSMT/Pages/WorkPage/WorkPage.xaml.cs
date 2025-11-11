@@ -387,7 +387,7 @@ namespace SSMT
         public void ExtractModel(object sender, RoutedEventArgs e)
         {
             //初始化日志类
-            LOG.Initialize(PathManager.Path_LogsFolder);
+            LOG.Initialize();
 
             try
             {
@@ -432,14 +432,14 @@ namespace SSMT
 
                     LOG.Info("OpenCurrentWorkSpaceFolder:");
 
-                    LOG.SaveFile(PathManager.Path_LogsFolder);
+                    LOG.SaveFile();
 
                     OpenCurrentWorkSpaceFolder(sender, e);
 
                 }
                 else
                 {
-                    LOG.SaveFile(PathManager.Path_LogsFolder);
+                    LOG.SaveFile();
                     OpenLatestLogFile(sender, e);
                 }
             }
@@ -637,7 +637,7 @@ namespace SSMT
 
         private void Button_AutoDetectGameTypeDrawIBList_Click(object sender, RoutedEventArgs e)
         {
-            LOG.Initialize(PathManager.Path_LogsFolder);
+            LOG.Initialize();
 
             try
             {
@@ -706,13 +706,13 @@ namespace SSMT
 
                 InitializeWorkSpace(GlobalConfig.CurrentWorkSpace);
 
-                LOG.SaveFile(PathManager.Path_LogsFolder);
+                LOG.SaveFile();
 
                 _ = SSMTMessageHelper.Show("识别完成，从" +TotalDrawIBList.Count.ToString() + "个DrawIB中，共识别到: " + MatchedDrawIBList.Count.ToString()  + "个DrawIB，已自动填写到DrawIB列表");
             }
             catch (Exception ex)
             {
-                LOG.SaveFile(PathManager.Path_LogsFolder);
+                LOG.SaveFile();
                 _ = SSMTMessageHelper.Show(ex.ToString());
             }
 

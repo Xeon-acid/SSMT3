@@ -43,7 +43,16 @@ namespace SSMT_Core
 
         public static string Path_LogsFolder
         {
-            get { return Path.Combine(GlobalConfig.SSMTCacheFolderPath, "Logs\\"); }
+            get {
+                string LogsFolder = Path.Combine(PathManager.Path_BaseFolder, "Logs\\");
+
+                if (!Directory.Exists(LogsFolder))
+                {
+                    Directory.CreateDirectory(LogsFolder);
+                }
+
+                return LogsFolder;
+            }
         }
 
 

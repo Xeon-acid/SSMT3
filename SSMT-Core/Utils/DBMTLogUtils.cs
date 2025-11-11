@@ -19,8 +19,13 @@ namespace SSMT_Core
         private static DateTime? StartTime = null;  // 用于存储开始时间
 
         // 初始化日志系统，清空现有日志并准备新的会话
-        public static void Initialize(string Path_LogsFolder)
+        public static void Initialize(string Path_LogsFolder = "")
         {
+            if (Path_LogsFolder == "")
+            {
+                Path_LogsFolder = PathManager.Path_LogsFolder;
+            }
+
             // 清空现有日志条目
             //LogLineList.Clear();
 
@@ -96,8 +101,13 @@ namespace SSMT_Core
 
 
         // 将内存中的日志条目写出到带有ISO 8601格式时间戳的新文件
-        public static void SaveFile(string Path_LogsFolder)
+        public static void SaveFile(string Path_LogsFolder = "")
         {
+            if (Path_LogsFolder == "")
+            {
+                Path_LogsFolder = PathManager.Path_LogsFolder;
+            }
+
             if (!Initialized)
             {
                 throw new InvalidOperationException("请先调用Initialize()方法以初始化日志系统。");

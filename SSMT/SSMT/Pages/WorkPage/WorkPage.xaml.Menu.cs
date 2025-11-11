@@ -123,14 +123,13 @@ namespace SSMT
 
         public void OpenLogsFolder(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(PathManager.Path_LogsFolder))
+            try
             {
                 SSMTCommandHelper.ShellOpenFolder(PathManager.Path_LogsFolder);
-
             }
-            else
+            catch (Exception ex)
             {
-                _ = SSMTMessageHelper.Show(PathManager.Path_LogsFolder + " 不存在，请至少执行任意一项任务后生成此日志文件夹。");
+                _ = SSMTMessageHelper.Show(ex.ToString());
             }
         }
 
