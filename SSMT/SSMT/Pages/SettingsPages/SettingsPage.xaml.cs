@@ -75,6 +75,8 @@ namespace SSMT
                 GlobalConfig.ShowTextureToolBoxPage = ToggleSwitch_ShowTextureToolBoxPage.IsOn;
                 GlobalConfig.ComboBoxUseGithubTokenSelectedIndex = ComboBox_UseGithubToken.SelectedIndex;
 
+                GlobalConfig.GithubToken = TextBox_GithubToken.Text;
+
                 GlobalConfig.SaveConfig();
             }
             catch (Exception ex)
@@ -102,7 +104,18 @@ namespace SSMT
             ToggleSwitch_ShowGameTypePage.IsOn = GlobalConfig.ShowGameTypePage;
             ToggleSwitch_ShowModManagePage.IsOn = GlobalConfig.ShowModManagePage;
             ToggleSwitch_ShowTextureToolBoxPage.IsOn = GlobalConfig.ShowTextureToolBoxPage;
+
             ComboBox_UseGithubToken.SelectedIndex = GlobalConfig.ComboBoxUseGithubTokenSelectedIndex;
+            TextBox_GithubToken.Text = GlobalConfig.GithubToken;
+
+            if (ComboBox_UseGithubToken.SelectedIndex == 0)
+            {
+                Expander_GithubToken.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Expander_GithubToken.Visibility = Visibility.Collapsed;
+            }
 
             ReadOver = true;
         }
@@ -171,7 +184,15 @@ namespace SSMT
             {
                 CheckUpdateIng = true;
 
+                
+
                 var source = new GithubSource("https://github.com/StarBobis/SSMT3/", null, false);
+                if (GlobalConfig.GithubToken != "")
+                {
+                    source = new GithubSource("https://github.com/StarBobis/SSMT3/", GlobalConfig.GithubToken, false);
+                }
+
+
                 var mgr = new UpdateManager(source);
                 // check for new version
                 ProgressRing_UpdateRing.Visibility = Visibility.Visible;
@@ -356,6 +377,22 @@ namespace SSMT
                 SaveSettingsToConfig();
 
                 //然后让Token填写框显示出来
+                if (ComboBox_UseGithubToken.SelectedIndex == 0)
+                {
+                    Expander_GithubToken.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Expander_GithubToken.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void TextBox_GithubToken_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (ReadOver)
+            {
+                SaveSettingsToConfig();
 
             }
         }

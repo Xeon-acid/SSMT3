@@ -47,6 +47,11 @@ namespace SSMT
             var url = $"https://api.github.com/repos/{owner}/{repo}/releases/latest";
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("request");
 
+            if (GlobalConfig.GithubToken != "")
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", GlobalConfig.GithubToken);
+            }
+
 
             var release = await _httpClient.GetFromJsonAsync<GitHubReleaseInfo>(url);
             return release;

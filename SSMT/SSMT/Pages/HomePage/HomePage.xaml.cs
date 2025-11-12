@@ -250,7 +250,7 @@ namespace SSMT
                     var notification = new Notification
                     {
                         Title = "Tips",
-                        Message = "您当前游戏: " + GlobalConfig.CurrentGameName+ " 的3Dmigoto目录下还没有对应的Package文件，请点击【从Github检查更新并自动下载最新3Dmigoto加载器包】来自动下载更新",
+                        Message = "您当前游戏: " + GlobalConfig.CurrentGameName+ " 的3Dmigoto目录下还没有对应的Package文件，请点击【从Github检查更新并自动下载最新3Dmigoto加载器包】来自动下载更新或者点击【选择3Dmigoto文件夹】来选择你自己的3Dmigoto文件夹以此来结合第三方工具例如XXMI Launcher，d3dxSkinManager，JASM等工具一起使用",
                         Severity = InfoBarSeverity.Warning
                     };
 

@@ -141,7 +141,16 @@ The following sets the maximum # of items to show before wrapping.-->
             </GridView.ItemsPanel>
         </GridView>
 
-
+        <InfoBar
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Margin="5"
+            >
+            <interactivity:Interaction.Behaviors>
+                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
+            </interactivity:Interaction.Behaviors>
+        </InfoBar>
 
 
         <!--当前游戏配置-->
@@ -544,17 +553,7 @@ The following sets the maximum # of items to show before wrapping.-->
             </ScrollViewer>
         </Border>
 
-        <!--InforBar放在这里是因为通知必须一直显示在最上面，否则会被配置界面挡住-->
-        <InfoBar
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Margin="5"
-            >
-            <interactivity:Interaction.Behaviors>
-                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
-            </interactivity:Interaction.Behaviors>
-        </InfoBar>
+
         <!--一键启动按钮和设置按钮-->
         <StackPanel
             Grid.Column="0"

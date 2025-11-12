@@ -19,6 +19,7 @@ namespace SSMT
         public static string CurrentGameName { get; set; } = "ZZZ";
         public static string CurrentWorkSpace { get; set; } = "";
         public static string SSMTCacheFolderPath { get; set; } = "";
+        public static string GithubToken { get; set; } = "";
         public static bool Theme { get; set; } = false;
         public static bool Chinese { get; set; } = true;
 
@@ -77,6 +78,11 @@ namespace SSMT
                     if (SettingsJsonObject.ContainsKey("DBMTWorkFolder"))
                     {
                         SSMTCacheFolderPath = (string)SettingsJsonObject["DBMTWorkFolder"];
+                    }
+                    //GithubToken
+                    if (SettingsJsonObject.ContainsKey("GithubToken"))
+                    {
+                        GithubToken = (string)SettingsJsonObject["GithubToken"];
                     }
 
                     //WindowWidth
@@ -162,6 +168,7 @@ namespace SSMT
                 SettingsJsonObject["CurrentGameName"] = CurrentGameName;
                 SettingsJsonObject["CurrentWorkSpace"] = CurrentWorkSpace;
                 SettingsJsonObject["DBMTWorkFolder"] = SSMTCacheFolderPath;
+                SettingsJsonObject["GithubToken"] = GithubToken;
                 SettingsJsonObject["WindowWidth"] = WindowWidth;
                 SettingsJsonObject["WindowHeight"] = WindowHeight;
                 SettingsJsonObject["WindowLuminosityOpacity"] = WindowLuminosityOpacity;

@@ -92,7 +92,11 @@ namespace SSMT
 
                 ComboBoxItem_UseGithubToken_Enable.Content = "开启";
                 ComboBoxItem_UseGithubToken_Disable.Content = "关闭";
-            
+
+                TextBlock_GithubToken.Text = "Github Token";
+
+                TextBox_GithubToken.PlaceholderText = "在此处填写你的Github Token";
+
             }
             else
             {
@@ -165,6 +169,9 @@ namespace SSMT
                 ComboBoxItem_UseGithubToken_Enable.Content = "Enable";
                 ComboBoxItem_UseGithubToken_Disable.Content = "Disable";
 
+                TextBlock_GithubToken.Text = "Github Token";
+
+                TextBox_GithubToken.PlaceholderText = "Input your Github Token here";
             }
 
         }
