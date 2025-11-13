@@ -10,12 +10,13 @@ using Windows.Media.Core;
 using Windows.Media.Playback;
 using WinUI3Helper;
 using SSMT_Core;
+using SSMT_Core.Utils;
 
 namespace SSMT
 {
     public partial class HomePage
     {
-
+        DispatcherTimer loopTimer;
         private async void Button_CheckMigotoPackageUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -113,80 +114,114 @@ namespace SSMT
                 ProgressRing_PackageUpdateRing.IsActive = false;
             }
         }
-
-        private async void AutoUpdateBackgroundPicture(string SpecificLogicName = "")
+        
+        private async Task AutoUpdateBackgroundPicture(string SpecificLogicName = "")
         {
-            /*
-            https://github.com/Scighost/Starward/issues/833
+            string GameId = HoyoBackgroundUtils.GetGameId(SpecificLogicName,GlobalConfig.Chinese);
 
-            新版启动器背景图API
-            https://hyp-api.mihoyo.com/hyp/hyp-connect/api/getAllGameBasicInfo?launcher_id=jGHBHlcOq1&language=zh-cn&game_id=64kMb5iAWu
+            if (GameId == "")
+            {
+                _ = SSMTMessageHelper.Show("当前选择的执行逻辑: " + SpecificLogicName + " 暂不支持自动更新背景图，请手动设置。");
+                return;
+            }
             
-            国际服
-            https://sg-hyp-api.hoyoverse.com/hyp/hyp-connect/api/getAllGameBasicInfo?launcher_id=VYTpXlbWo8&language=zh-cn7D&game_id=4ziysqXOQ8
+            string BaseUrl = HoyoBackgroundUtils.GetBackgroundUrl(GameId,GlobalConfig.Chinese);
+            //webm不一定存在，所以直接try catch，出错就懒得管了
 
-            替换game_id参数还有别的几个游戏背景图
-
-            name biz game_id
-
-            绝区零 nap_cn x6znKlJ0xK
-            崩坏星穹铁道 hkrpg_cn 64kMb5iAWu
-            原神 hk4e_cn 1Z8W5NHUQb
-            崩坏3 bh3_cn osvnlOc0S8
-            ZenlessZoneZero nap_global U5hbdsT9W7
-            HonkaiStarRail hkrpg_global 4ziysqXOQ8
-            GenshinImpact hk4e_global gopR6Cufr3
-            HonkaiImpact3rd bh3_global 5TIVvvcwtM
-             */
-            string GameId = "";
-            string LogicNameStr = SpecificLogicName;
-
-            if(LogicNameStr == "")
+            bool UseWebmBackground = false;
+            try
             {
-                LogicNameStr = ComboBox_LogicName.SelectedItem.ToString();
+                string NewWebmBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebmBackground(BaseUrl);
+                if (File.Exists(NewWebmBackgroundPath))
+                {
+                    UseWebmBackground = true;
+                }
+
+                MainWindowImageBrush.Visibility = Visibility.Collapsed;
+                BackgroundVideo.Visibility = Visibility.Visible;
+
+                var player = new MediaPlayer
+                {
+                    Source = MediaSource.CreateFromUri(new Uri(NewWebmBackgroundPath)),
+                    IsLoopingEnabled = false
+                };
+
+
+                
+                BackgroundVideo.SetMediaPlayer(player);
+                player.Play();
+
+                // 2. 提前一定时间 手动 Seek 到 0，试图避免循环播放时，一瞬间卡顿的问题
+                //试了好久，根本没用，WinUI3默认提供的MediaPlayer就没考虑过这种用途
+                //我估计米哈游启动器里面是直接用Shader实现的。
+                //他吗的必须得换QT6了，不然被限制的死死的。
+                //开箱即用的好处就是下限高，但是问题是上限也被锁死了。
+                //如果不能做到最好，那做出来还有什么意义，给用户喂粑粑嘛？
+                //暂时不管了，反正核心功能不在视觉效果上，抓紧迁移到QT6再考虑追上限。
+                loopTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(10)
+                };
+
+                loopTimer.Tick += (_, __) =>
+                {
+                    //如果当前的Position + 100毫秒 大于持续时间
+                    if (player.PlaybackSession.Position + TimeSpan.FromMilliseconds(10) >=
+                        player.PlaybackSession.NaturalDuration)
+                    {
+                        player.PlaybackSession.Position = TimeSpan.FromMilliseconds(0);
+                    }
+                };
+
+                loopTimer.Start();
+
+                VisualHelper.CreateFadeAnimation(BackgroundVideo);
+                LOG.Info("设置好背景图视频了");
+            }
+            catch (Exception ex) {
+                LOG.Info(ex.ToString());
             }
 
-            if (LogicNameStr == LogicName.GIMI)
-            {
-                GameId = "1Z8W5NHUQb";
-            }
-            else if (LogicNameStr == LogicName.SRMI)
-            {
-                GameId = "64kMb5iAWu";
-            }
-            else if (LogicNameStr == LogicName.HIMI)
-            {
-                GameId = "osvnlOc0S8";
-
-            }
-            else if (LogicNameStr == LogicName.ZZMI)
-            {
-                GameId = "x6znKlJ0xK";
+            //如果使用上了视频背景图，那就不用管后面的内容了
+            if (UseWebmBackground) {
+                LOG.Info("用上视频背景图了，后面内容不管了");
+                return;
             }
 
-            if (GameId != "")
+            //否则使用普通背景图
+            string NewWebpBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebpBackground(BaseUrl);
+            if (File.Exists(NewWebpBackgroundPath))
             {
-                string NewBackGroundPath = await SSMTResourceUtils.DownloadLatestBackground(GameId);
+                BackgroundVideo.Visibility = Visibility.Collapsed;
+                MainWindowImageBrush.Visibility = Visibility.Visible;
+
                 //MainWindowImageBrush.Source = new BitmapImage(new Uri(NewBackGroundPath));
                 VisualHelper.CreateScaleAnimation(imageVisual);
                 VisualHelper.CreateFadeAnimation(imageVisual);
 
-                MainWindowImageBrush.Source = new BitmapImage(new Uri(NewBackGroundPath + "?t=" + DateTime.Now.Ticks));
+                MainWindowImageBrush.Source = new BitmapImage(new Uri(NewWebpBackgroundPath + "?t=" + DateTime.Now.Ticks));
             }
-            else
-            {
-                _ = SSMTMessageHelper.Show("当前选择的执行逻辑: " + LogicNameStr + " 暂不支持自动更新背景图，请手动设置。");
-            }
+            
         }
 
-        private void Button_CheckBGUpdate_Click(object sender, RoutedEventArgs e)
+        private async void Button_CheckBGUpdate_Click(object sender, RoutedEventArgs e)
         {
             try {
-                AutoUpdateBackgroundPicture();
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Visible;
+                Button_AutoUpdateBackground.IsEnabled = false;
+                await AutoUpdateBackgroundPicture(ComboBox_LogicName.SelectedItem.ToString());
                 _ = SSMTMessageHelper.Show("背景图更新成功");
+                Button_AutoUpdateBackground.IsEnabled = true;
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
+                //出错的话得让按钮能再次按下
+                Button_AutoUpdateBackground.IsEnabled = true;
+
+                //也不能继续转圈圈
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
+
                 _ = SSMTMessageHelper.Show(ex.ToString());
             }
         }

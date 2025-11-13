@@ -494,12 +494,22 @@ The following sets the maximum # of items to show before wrapping.-->
                             <FontIcon Glyph="&#xe8ba;" FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
-                        <Button
-                            Click="Button_CheckBGUpdate_Click"
-                            Style="{StaticResource AccentButtonStyle}"
-                            Margin="5"
-                            x:Name="Button_AutoUpdateBackground"
-                            />
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Click="Button_CheckBGUpdate_Click"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="5"
+                                x:Name="Button_AutoUpdateBackground"
+                                />
+
+                            <ProgressRing 
+                                Visibility="Collapsed"
+                                x:Name="ProgressRing_AutoUpdateBackground"
+                                IsActive="True"></ProgressRing>
+                            
+                        </StackPanel>
+
+                        
 
                     </controls:SettingsCard>
 
