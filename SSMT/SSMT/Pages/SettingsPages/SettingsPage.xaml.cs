@@ -73,7 +73,7 @@ namespace SSMT
                 GlobalConfig.ShowGameTypePage = ToggleSwitch_ShowGameTypePage.IsOn;
                 GlobalConfig.ShowModManagePage = ToggleSwitch_ShowModManagePage.IsOn;
                 GlobalConfig.ShowTextureToolBoxPage = ToggleSwitch_ShowTextureToolBoxPage.IsOn;
-                GlobalConfig.ComboBoxUseGithubTokenSelectedIndex = ComboBox_UseGithubToken.SelectedIndex;
+                GlobalConfig.UseGithubToken =ToggleSwitch_UseGithubToken.IsOn;
                 GlobalConfig.UseTitleBar = ToggleSwitch_UseTitleBar.IsOn;
 
                 GlobalConfig.GithubToken = TextBox_GithubToken.Text;
@@ -106,12 +106,12 @@ namespace SSMT
             ToggleSwitch_ShowModManagePage.IsOn = GlobalConfig.ShowModManagePage;
             ToggleSwitch_ShowTextureToolBoxPage.IsOn = GlobalConfig.ShowTextureToolBoxPage;
 
-            ComboBox_UseGithubToken.SelectedIndex = GlobalConfig.ComboBoxUseGithubTokenSelectedIndex;
+            ToggleSwitch_UseGithubToken.IsOn = GlobalConfig.UseGithubToken;
             TextBox_GithubToken.Text = GlobalConfig.GithubToken;
 
             ToggleSwitch_UseTitleBar.IsOn = GlobalConfig.UseTitleBar;
 
-            if (ComboBox_UseGithubToken.SelectedIndex == 0)
+            if (ToggleSwitch_UseGithubToken.IsOn)
             {
                 Expander_GithubToken.Visibility = Visibility.Visible;
             }
@@ -190,7 +190,7 @@ namespace SSMT
                 
 
                 var source = new GithubSource("https://github.com/StarBobis/SSMT3/", null, false);
-                if (GlobalConfig.GithubToken != "")
+                if (GlobalConfig.UseGithubToken && GlobalConfig.GithubToken != "")
                 {
                     source = new GithubSource("https://github.com/StarBobis/SSMT3/", GlobalConfig.GithubToken, false);
                 }
@@ -373,23 +373,7 @@ namespace SSMT
             }
         }
 
-        private void ComboBox_UseGithubToken_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ReadOver)
-            {
-                SaveSettingsToConfig();
 
-                //然后让Token填写框显示出来
-                if (ComboBox_UseGithubToken.SelectedIndex == 0)
-                {
-                    Expander_GithubToken.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    Expander_GithubToken.Visibility = Visibility.Collapsed;
-                }
-            }
-        }
 
         private void TextBox_GithubToken_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -406,6 +390,24 @@ namespace SSMT
             {
                 SaveSettingsToConfig();
                 MainWindow.CurrentWindow.ExtendsContentIntoTitleBar = !ToggleSwitch_UseTitleBar.IsOn;
+            }
+        }
+
+        private void ToggleSwitch_UseGithubToken_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ReadOver)
+            {
+                SaveSettingsToConfig();
+
+                //然后让Token填写框显示出来
+                if (ToggleSwitch_UseGithubToken.IsOn)
+                {
+                    Expander_GithubToken.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Expander_GithubToken.Visibility = Visibility.Collapsed;
+                }
             }
         }
     }

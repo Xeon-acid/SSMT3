@@ -90,8 +90,8 @@ namespace SSMT
                 SettingsCard_UseGithubToken.Header = "使用Github Token";
                 SettingsCard_UseGithubToken.Description = "在自动下载更新3Dmigoto包以及自动更新时，使用Github Token来访问Github以避免出现443、连接超时、目标计算机积极拒绝访问等问题";
 
-                ComboBoxItem_UseGithubToken_Enable.Content = "开启";
-                ComboBoxItem_UseGithubToken_Disable.Content = "关闭";
+                ToggleSwitch_UseGithubToken.OnContent = "开启";
+                ToggleSwitch_UseGithubToken.OffContent = "关闭";
 
                 TextBlock_GithubToken.Text = "Github Token";
 
@@ -171,8 +171,9 @@ namespace SSMT
 
                 SettingsCard_UseGithubToken.Header = "Use Github Token";
                 SettingsCard_UseGithubToken.Description = "Use Github Token When Try To Download 3Dmigoto Package or Auto Update SSMT Version To Avoid Network Error";
-                ComboBoxItem_UseGithubToken_Enable.Content = "Enable";
-                ComboBoxItem_UseGithubToken_Disable.Content = "Disable";
+                
+                ToggleSwitch_UseGithubToken.OnContent = "Enable";
+                ToggleSwitch_UseGithubToken.OffContent = "Disable";
 
                 TextBlock_GithubToken.Text = "Github Token";
 

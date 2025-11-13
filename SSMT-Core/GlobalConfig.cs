@@ -45,10 +45,10 @@ namespace SSMT
         /// </summary>
         public static bool ShowTextureToolBoxPage { get; set; } = false;
         public static bool UseTitleBar { get; set; } = false;
+        public static bool UseGithubToken { get; set; } = false;
 
 
-        //默认选中关闭，因为大部分人都不用Github Token，此选项只服务于少数需要用到的用户
-        public static int ComboBoxUseGithubTokenSelectedIndex { get; set; } = 1;
+
 
 
 
@@ -144,11 +144,13 @@ namespace SSMT
                         UseTitleBar = (bool)SettingsJsonObject["UseTitleBar"];
                     }
 
-                    //ComboBoxUseGithubTokenSelectedIndex
-                    if (SettingsJsonObject.ContainsKey("ComboBoxUseGithubTokenSelectedIndex"))
+                    //UseGithubToken
+                    if (SettingsJsonObject.ContainsKey("UseGithubToken"))
                     {
-                        ComboBoxUseGithubTokenSelectedIndex = (int)SettingsJsonObject["ComboBoxUseGithubTokenSelectedIndex"];
+                        UseGithubToken = (bool)SettingsJsonObject["UseGithubToken"];
                     }
+
+                  
                 }
 
 
@@ -185,7 +187,7 @@ namespace SSMT
                 SettingsJsonObject["ShowModManagePage"] = ShowModManagePage;
                 SettingsJsonObject["ShowTextureToolBoxPage"] = ShowTextureToolBoxPage;
                 SettingsJsonObject["UseTitleBar"] = UseTitleBar;
-                SettingsJsonObject["ComboBoxUseGithubTokenSelectedIndex"] = ComboBoxUseGithubTokenSelectedIndex;
+                SettingsJsonObject["UseGithubToken"] = UseGithubToken;
 
                 //写出内容
                 string WirteStirng = SettingsJsonObject.ToString();

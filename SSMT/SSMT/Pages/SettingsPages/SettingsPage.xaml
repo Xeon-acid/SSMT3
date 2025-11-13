@@ -148,10 +148,9 @@
                         <FontIcon Glyph="&#xf78d;" FontFamily="Segoe Fluent Icons"/>
                     </controls:SettingsCard.HeaderIcon>
 
-                    <ComboBox x:Name="ComboBox_UseGithubToken" SelectionChanged="ComboBox_UseGithubToken_SelectionChanged">
-                        <ComboBoxItem x:Name="ComboBoxItem_UseGithubToken_Enable"></ComboBoxItem>
-                        <ComboBoxItem x:Name="ComboBoxItem_UseGithubToken_Disable"></ComboBoxItem>
-                    </ComboBox>
+                    <ToggleSwitch x:Name="ToggleSwitch_UseGithubToken" Toggled="ToggleSwitch_UseGithubToken_Toggled"></ToggleSwitch>
+
+ 
 
                 </controls:SettingsCard>
 

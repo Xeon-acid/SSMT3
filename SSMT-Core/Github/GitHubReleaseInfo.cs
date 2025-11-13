@@ -47,7 +47,7 @@ namespace SSMT
             var url = $"https://api.github.com/repos/{owner}/{repo}/releases/latest";
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("request");
 
-            if (GlobalConfig.GithubToken != "")
+            if (GlobalConfig.UseGithubToken && GlobalConfig.GithubToken != "")
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", GlobalConfig.GithubToken);
             }
