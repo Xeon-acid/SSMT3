@@ -159,7 +159,7 @@ namespace SSMT
                 //如果不能做到最好，那做出来还有什么意义，给用户喂粑粑嘛？
                 //暂时不管了，反正核心功能不在视觉效果上，抓紧迁移到QT6再考虑追上限。
 
-                //哦对了，我们可以去抄StarWard！
+                //哦对了，我们可以去抄StarWard、CollapsedLauncher等同类产品。
                 loopTimer = new DispatcherTimer
                 {
                     Interval = TimeSpan.FromMilliseconds(10)
