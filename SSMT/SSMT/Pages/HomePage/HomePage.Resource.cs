@@ -158,6 +158,8 @@ namespace SSMT
                 //开箱即用的好处就是下限高，但是问题是上限也被锁死了。
                 //如果不能做到最好，那做出来还有什么意义，给用户喂粑粑嘛？
                 //暂时不管了，反正核心功能不在视觉效果上，抓紧迁移到QT6再考虑追上限。
+
+                //哦对了，我们可以去抄StarWard！
                 loopTimer = new DispatcherTimer
                 {
                     Interval = TimeSpan.FromMilliseconds(10)
