@@ -142,6 +142,7 @@ The following sets the maximum # of items to show before wrapping.-->
         </GridView>
 
         <InfoBar
+            x:Name="InforBar_NorificationQueue"
             Grid.ColumnSpan="2"
             VerticalAlignment="Top"
             HorizontalAlignment="Center"
