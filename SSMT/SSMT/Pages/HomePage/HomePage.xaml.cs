@@ -79,60 +79,9 @@ namespace SSMT
             InitializeGameNameList();
 
             GameNameChanged(GlobalConfig.CurrentGameName);
-
         }
 
-        private void InitializeBackground()
-        {
-
-            // 默认：隐藏视频，清空图片
-            if (BackgroundVideo != null)
-            {
-                BackgroundVideo.SetMediaPlayer(null);
-                BackgroundVideo.Visibility = Visibility.Collapsed;
-            }
-
-            //清空图片内容并且设置为不显示，防止上一个游戏切换过来时，
-            //由于缓存导致新切换到的游戏没有背景图时显示上一个游戏的背景图残留
-            MainWindowImageBrush.Source = null;
-            MainWindowImageBrush.Visibility = Visibility.Collapsed;
-
-            //来一个支持的后缀名列表，然后依次判断
-            List<BackgroundSuffixItem> SuffixList = new List<BackgroundSuffixItem>();
-            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".webm", IsVideo = true});
-            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".mp4", IsVideo = true });
-            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".webp", IsPicture = true });
-            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".png", IsPicture = true });
-
-            //这里轮着试一遍所有的背景图类型，如果有的话就设置上了
-            //如果没有的话就保持刚开始初始化完那种没有的状态了
-            foreach (BackgroundSuffixItem SuffixItem in SuffixList)
-            {
-                string BackgroundFilePath = Path.Combine(PathManager.Path_CurrentGamesFolder, "Background" + SuffixItem.Suffix);
-
-                if (!File.Exists(BackgroundFilePath))
-                {
-                    continue;
-                }
-
-                if (SuffixItem.IsVideo)
-                {
-                    ShowBackgroundVideo(BackgroundFilePath);
-                    break;
-                }
-                else if (SuffixItem.IsPicture)
-                {
-                    ShowBackgroundPicture(BackgroundFilePath);
-                    break;
-                }
-
-            }
-
-
-            
-        }
-
-
+   
 
         private void GameNameChanged(string ChangeToGameName)
         {
@@ -146,8 +95,10 @@ namespace SSMT
             //根据当前游戏，初始化背景图或者背景视频
             InitializeBackground();
 
-
+            //
             InitializePanel();
+
+
             ReadConfigsToPanel();
 
 
@@ -235,14 +186,17 @@ namespace SSMT
 
 
             SelectGameIconToCurrentGame();
+
+            //这里调用初始化游戏名称下拉菜单的目的是
+            //让当前选中项重新选中到当前的游戏上
+            //可能比较难理解对吧，因为GameNameChanged也会被图标的选中触发
+            //所以要把设置页面的下拉菜单同步选中，此时复用方法就是最方便的
+            //但是注意必须设置IsLoading = true再调用，调用完设置IsLoading = false
+            //不然就会死循环调用
             InitializeGameNameList();
 
-            IsLoading = false;
 
-
-			//最后保底配置，如果真的还有没配置的，就会触发这里的从d3dx.ini读取配置
-			IsLoading = true;
-
+			//最后如果有d3dx.ini的话，如果有哪些路径配置还是空的，就试图从d3dx.ini中解析读取，保底机制
 			//target,launch,launch_args,show_warnings,symlink
 			string d3dxini_path = Path.Combine(TextBox_3DmigotoPath.Text, "d3dx.ini");
 			if (File.Exists(d3dxini_path))
@@ -270,8 +224,11 @@ namespace SSMT
 
 			IsLoading = false;
 
+
+            //米的四个游戏保底更新背景图，主要是为了用户第一次拿到手SSMT的时候就能有背景图
 			LoadAtLeastPicture();
 
+            //游戏切换后要把Package标识以及版本号改一下
             UpdatePackageVersionLink();
         }
      
@@ -557,10 +514,7 @@ namespace SSMT
 
         private void ReadConfigsToPanel()
         {
-            if (IsLoading)
-            {
-                return;
-            }
+            LOG.Info("ReadConfigsToPanel::Start");
 
             GameConfig CurrentGameConfig = new GameConfig();
 
@@ -594,12 +548,14 @@ namespace SSMT
                 LOG.Info("文件中保存的LaunchPath不存在，无法设置");
             }
 
-                TextBox_LaunchArgsPath.Text = CurrentGameConfig.LaunchArgs;
+            TextBox_LaunchArgsPath.Text = CurrentGameConfig.LaunchArgs;
+
+            LOG.Info("ReadConfigsToPanel::End");
 
         }
 
 
-     
+
 
         private void Button_Open3DmigotoFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -735,17 +691,7 @@ namespace SSMT
 
         }
 
-        private void ToggleSwitch_AutoSetAnalyseOptions_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (IsLoading)
-            {
-                return;
-            }
-
-            GameConfig gameConfig = new GameConfig();
-            gameConfig.AutoSetAnalyseOptionsSelectedIndex = ComboBox_AutoSetAnalyseOptions.SelectedIndex;
-            gameConfig.SaveConfig();
-        }
+   
 
 
 

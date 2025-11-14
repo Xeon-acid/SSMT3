@@ -1,4 +1,6 @@
-﻿using SSMT_Core;
+﻿using Microsoft.UI.Xaml;
+using SSMT_Core;
+using SSMT_Core.InfoItemClass;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -106,6 +108,8 @@ namespace SSMT
         /// 上面读取游戏图标列表只是把图标列表给加载上，但是还没有选中
         /// 这里我们读取了游戏名称列表，放到下拉菜单中，并且读取历史配置来决定选中哪一个
         /// 自动触发游戏名称改变时的方法，然后游戏图标列表也会自动选中到对应的项
+        /// 
+        /// 注意:不在isLoading中调用会触发游戏改变方法
         /// </summary>
         private void InitializeGameNameList()
         {
@@ -137,6 +141,56 @@ namespace SSMT
                 }
             }
         }
+
+        private void InitializeBackground()
+        {
+
+            // 默认：隐藏视频，清空图片
+            if (BackgroundVideo != null)
+            {
+                BackgroundVideo.SetMediaPlayer(null);
+                BackgroundVideo.Visibility = Visibility.Collapsed;
+            }
+
+            //清空图片内容并且设置为不显示，防止上一个游戏切换过来时，
+            //由于缓存导致新切换到的游戏没有背景图时显示上一个游戏的背景图残留
+            MainWindowImageBrush.Source = null;
+            MainWindowImageBrush.Visibility = Visibility.Collapsed;
+
+            //来一个支持的后缀名列表，然后依次判断
+            List<BackgroundSuffixItem> SuffixList = new List<BackgroundSuffixItem>();
+            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".webm", IsVideo = true });
+            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".mp4", IsVideo = true });
+            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".webp", IsPicture = true });
+            SuffixList.Add(new BackgroundSuffixItem { Suffix = ".png", IsPicture = true });
+
+            //这里轮着试一遍所有的背景图类型，如果有的话就设置上了
+            //如果没有的话就保持刚开始初始化完那种没有的状态了
+            foreach (BackgroundSuffixItem SuffixItem in SuffixList)
+            {
+                string BackgroundFilePath = Path.Combine(PathManager.Path_CurrentGamesFolder, "Background" + SuffixItem.Suffix);
+
+                if (!File.Exists(BackgroundFilePath))
+                {
+                    continue;
+                }
+
+                if (SuffixItem.IsVideo)
+                {
+                    ShowBackgroundVideo(BackgroundFilePath);
+                    break;
+                }
+                else if (SuffixItem.IsPicture)
+                {
+                    ShowBackgroundPicture(BackgroundFilePath);
+                    break;
+                }
+
+            }
+
+        }
+
+
 
 
 

@@ -17,9 +17,9 @@ namespace SSMT
     public partial class HomePage
     {
 
-        //IsLoopingEnabled有个严重的问题就是循环播放时，会卡顿一瞬间
+        //TODO IsLoopingEnabled有个严重的问题就是循环播放时，会卡顿一瞬间
         //但是米哈游启动器就不卡，这个基本上就是WinUI3这个MediaPlayer实现的问题
-        //暂时先不解决
+        //暂时先不解决，不碰底层的情况下，不是轻易能解决的。
         //咱先解决有没有的问题，再解决好不好的问题。
         MediaPlayer BackgroundMediaPlayer = new MediaPlayer { 
             IsLoopingEnabled = true,
@@ -166,20 +166,31 @@ namespace SSMT
             //webm不一定存在，所以直接try catch，出错就懒得管了
 
             bool UseWebmBackground = false;
-            try
-            {
-                string NewWebmBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebmBackground(BaseUrl);
-                if (File.Exists(NewWebmBackgroundPath))
-                {
-                    UseWebmBackground = true;
-                }
 
-                ShowBackgroundVideo(NewWebmBackgroundPath);
-                LOG.Info("设置好背景图视频了");
+            //TODO 注意，绝区零的背景图视频有毛病，虽然都是.webm格式，但是只能在浏览器中播放，无法使用本地的媒体播放器播放
+            //这意味着我们必须添加ffmpeg转码，下载下来之后执行转换，变为mp4视频，然后再应用为背景图，因为我实际测试发现WinUI3也是无法播放的
+            //因为WinUI3用的就是系统的解码，底层都是一个东西导致的。
+            //有点麻烦了，而且动态背景图本身就存在循环播放一瞬间卡顿的问题，而且暂时没法解决
+            //综合来说，解决这个问题收益不大，暂时不实现了，随缘等一个热爱ZZZ的开发者提PR实现一下
+            if (SpecificLogicName != LogicName.ZZMI)
+            {
+                try
+                {
+                    string NewWebmBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebmBackground(BaseUrl);
+                    if (File.Exists(NewWebmBackgroundPath))
+                    {
+                        UseWebmBackground = true;
+                    }
+
+                    ShowBackgroundVideo(NewWebmBackgroundPath);
+                    LOG.Info("设置好背景图视频了");
+                }
+                catch (Exception ex)
+                {
+                    LOG.Info(ex.ToString());
+                }
             }
-            catch (Exception ex) {
-                LOG.Info(ex.ToString());
-            }
+            
 
             //如果使用上了视频背景图，那就不用管后面的内容了
             if (UseWebmBackground) {
