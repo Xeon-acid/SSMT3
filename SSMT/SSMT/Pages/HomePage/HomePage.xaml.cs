@@ -92,6 +92,8 @@ namespace SSMT
 			GlobalConfig.CurrentGameName = ChangeToGameName;
             GlobalConfig.SaveConfig();
 
+            BGAutoUpdateShow();
+
             //根据当前游戏，初始化背景图或者背景视频
             InitializeBackground();
 
@@ -100,6 +102,8 @@ namespace SSMT
 
 
             ReadConfigsToPanel();
+
+            
 
 
 
@@ -246,6 +250,45 @@ namespace SSMT
             HyperlinkButton_MigotoPackageVersion.NavigateUri = new Uri(url);
         }
 
+        private void BGAutoUpdateShow()
+        {
+            try
+            {
+                string CurrentGameName = ComboBox_GameName.SelectedItem.ToString();
+
+                //if (CurrentGameName == LogicName.GIMI)
+                //{
+                //    Button_AutoUpdateBackgroundOnlyStatic.Visibility = Visibility.Collapsed;
+                //    Button_AutoUpdateBackground.Visibility = Visibility.Visible;
+                //}
+                switch(CurrentGameName)
+                {
+                    case LogicName.GIMI:
+                        ChangeBGButtonIfVisible(Visibility.Visible, Visibility.Collapsed);
+                        break;
+                    case LogicName.SRMI:
+                    case LogicName.HIMI:
+                    case LogicName.ZZMI:
+                        ChangeBGButtonIfVisible(Visibility.Visible, Visibility.Visible);
+                        break;
+                    case LogicName.WWMI:
+                        ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        break;
+                    default:
+                        ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+        }
+        private void ChangeBGButtonIfVisible(Visibility val1, Visibility val2)
+        {
+            Button_AutoUpdateBackgroundOnlyStatic.Visibility = val1;
+            Button_AutoUpdateBackground.Visibility = val2;
+        }
         private async void LoadAtLeastPicture()
         {
             //只有米的四个游戏会根据游戏名称默认触发保底背景图更新

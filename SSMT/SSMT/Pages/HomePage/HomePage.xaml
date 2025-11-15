@@ -497,6 +497,12 @@ The following sets the maximum # of items to show before wrapping.-->
 
                         <StackPanel Orientation="Horizontal">
                             <Button
+                                Click="Button_CheckBGUpdate_Click_Static"
+                                Style="{StaticResource ButtonRevealStyle}"
+                                Margin="5"
+                                x:Name="Button_AutoUpdateBackgroundOnlyStatic"
+                                />
+                            <Button
                                 Click="Button_CheckBGUpdate_Click"
                                 Style="{StaticResource AccentButtonStyle}"
                                 Margin="5"

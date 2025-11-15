@@ -62,7 +62,8 @@ namespace SSMT
 
                 Button_ChooseGameIcon.Content = "选择图标文件";
 
-                Button_AutoUpdateBackground.Content = "检查背景图更新";
+                Button_AutoUpdateBackground.Content = "检查背景图更新(优先动态)";
+                Button_AutoUpdateBackgroundOnlyStatic.Content = "检查静态背景图更新";
 
 
                 Button_SelectBackgroundFile.Content = "选择背景图文件";

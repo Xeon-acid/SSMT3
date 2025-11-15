@@ -12,23 +12,40 @@ namespace SSMT
 {
     public class LogicName
     {
-        public static string UnityVS { get; set; } = "UnityVS";
-        public static string UnityCS { get; set; } = "UnityCS";
-        public static string UnityCPU { get; set; } = "UnityCPU";
-        public static string GIMI { get; set; } = "GIMI";
-        public static string HIMI { get; set; } = "HIMI";
-        public static string SRMI { get; set; } = "SRMI";
-        public static string ZZMI { get; set; } = "ZZMI";
-        public static string WWMI { get; set; } = "WWMI";
-        //public static string IdentityV { get; set; } = "IdentityV";
-        public static string CTXMC { get; set; } = "CTXMC";
-        public static string IdentityV2 { get; set; } = "IdentityV2";
+        //    public static string UnityVS { get; set; } = "UnityVS";
+        //    public static string UnityCS { get; set; } = "UnityCS";
+        //    public static string UnityCPU { get; set; } = "UnityCPU";
+        //    public static string GIMI { get; set; } = "GIMI";
+        //    public static string HIMI { get; set; } = "HIMI";
+        //    public static string SRMI { get; set; } = "SRMI";
+        //    public static string ZZMI { get; set; } = "ZZMI";
+        //    public static string WWMI { get; set; } = "WWMI";
+        //    //public static string IdentityV { get; set; } = "IdentityV";
+        //    public static string CTXMC { get; set; } = "CTXMC";
+        //    public static string IdentityV2 { get; set; } = "IdentityV2";
 
-        public static string YYSLS { get; set; } = "YYSLS";
-        public static string AILIMIT { get; set; } = "AILIMIT";
-        public static string HOK { get; set; } = "HOK";
-        public static string NierR { get; set; } = "NierR";
-        public static string SnowBreak { get; set; } = "SnowBreak";
+        //    public static string YYSLS { get; set; } = "YYSLS";
+        //    public static string AILIMIT { get; set; } = "AILIMIT";
+        //    public static string HOK { get; set; } = "HOK";
+        //    public static string NierR { get; set; } = "NierR";
+        //    public static string SnowBreak { get; set; } = "SnowBreak";
+        public const string UnityVS = "UnityVS";
+        public const string UnityCS = "UnityCS";
+        public const string UnityCPU = "UnityCPU";
+        public const string GIMI = "GIMI";
+        public const string HIMI = "HIMI";
+        public const string SRMI = "SRMI";
+        public const string ZZMI = "ZZMI";
+        public const string WWMI = "WWMI";
+        //public const string IdentityV = "IdentityV";
+        public const string CTXMC = "CTXMC";
+        public const string IdentityV2 = "IdentityV2";
+
+        public const string YYSLS = "YYSLS";
+        public const string AILIMIT = "AILIMIT";
+        public const string HOK = "HOK";
+        public const string NierR = "NierR";
+        public const string SnowBreak = "SnowBreak";
 
     }
     public class GameConfig

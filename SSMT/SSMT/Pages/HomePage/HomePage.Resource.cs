@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using SSMT_Core;
 using SSMT_Core.Utils;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -319,6 +320,63 @@ namespace SSMT
                 ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
 
                 _ = SSMTMessageHelper.Show(ex.ToString());
+            }
+        }
+
+        private async void Button_CheckBGUpdate_Click_Static(object sender, RoutedEventArgs e)
+        {
+            // 直接复用
+            try
+            {
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Visible;
+                Button_AutoUpdateBackground.IsEnabled = false;
+                await AutoUpdateBackgroundPictureStatic(ComboBox_LogicName.SelectedItem.ToString());
+                _ = SSMTMessageHelper.Show("背景图更新成功");
+                Button_AutoUpdateBackground.IsEnabled = true;
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                //出错的话得让按钮能再次按下
+                Button_AutoUpdateBackground.IsEnabled = true;
+
+                //也不能继续转圈圈
+                ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
+
+                _ = SSMTMessageHelper.Show(ex.ToString());
+            }
+        }
+
+        private async Task AutoUpdateBackgroundPictureStatic(string SpecificLogicName = "")
+        {
+            ResetBackground();
+            string GameId = HoyoBackgroundUtils.GetGameId(SpecificLogicName, GlobalConfig.Chinese);
+
+            if (GameId == "")
+            {
+                _ = SSMTMessageHelper.Show("当前选择的执行逻辑: " + SpecificLogicName + " 暂不支持自动更新背景图，请手动设置。");
+                return;
+            }
+
+            string BaseUrl = HoyoBackgroundUtils.GetBackgroundUrl(GameId, GlobalConfig.Chinese);
+            string NewWebpBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebpBackground(BaseUrl);
+            if (File.Exists(NewWebpBackgroundPath))
+            {
+                ShowBackgroundPicture(NewWebpBackgroundPath);
+            }
+            try
+            {
+                string mp4Path = PathManager.Path_CurrentGamesFolder;
+                string fullPath = "";
+                foreach (var file in new[] { "Background.mp4", "Background.webm" })
+                {
+                    fullPath = Path.Combine(mp4Path, file);
+                    File.Delete(fullPath);
+                }
+            }
+            catch (Exception delEx)
+            {
+                LOG.Info("删除中间 webm 文件失败: " + delEx.Message);
             }
         }
 
