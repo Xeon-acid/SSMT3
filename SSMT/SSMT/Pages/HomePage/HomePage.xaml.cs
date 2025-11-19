@@ -83,7 +83,7 @@ namespace SSMT
 
    
 
-        private void GameNameChanged(string ChangeToGameName)
+        private async void GameNameChanged(string ChangeToGameName)
         {
             //清楚顶部InfoBar内容
 			NotificationQueue.Clear();
@@ -92,10 +92,8 @@ namespace SSMT
 			GlobalConfig.CurrentGameName = ChangeToGameName;
             GlobalConfig.SaveConfig();
 
-            //根据当前游戏，初始化背景图或者背景视频
-            InitializeBackground();
 
-            //
+
             InitializePanel();
 
 
@@ -225,13 +223,13 @@ namespace SSMT
 
 
 			IsLoading = false;
-
-
-            //米的四个游戏保底更新背景图，主要是为了用户第一次拿到手SSMT的时候就能有背景图
-			LoadAtLeastPicture();
-
             //游戏切换后要把Package标识以及版本号改一下
             UpdatePackageVersionLink();
+
+            //背景图放到最后更新，没必要更新那么早
+            //根据当前游戏，初始化背景图或者背景视频
+            await InitializeBackground();
+
         }
      
 
@@ -246,40 +244,7 @@ namespace SSMT
             HyperlinkButton_MigotoPackageVersion.NavigateUri = new Uri(url);
         }
 
-        private async void LoadAtLeastPicture()
-        {
-            //只有米的四个游戏会根据游戏名称默认触发保底背景图更新
-            try
-            {
-                string CurrentGameName = ComboBox_GameName.SelectedItem.ToString();
-
-                if (CurrentGameName == LogicName.GIMI ||
-                    CurrentGameName == LogicName.SRMI ||
-                    CurrentGameName == LogicName.HIMI ||
-                    CurrentGameName == LogicName.ZZMI
-                    )
-                {
-                    //_ = SSMTMessageHelper.Show(CurrentLogicName);
-                    string PossibleWebpPicture = Path.Combine(PathManager.Path_CurrentGamesFolder, "Background.webp");
-                    string PossiblePngBackgroundPath = Path.Combine(PathManager.Path_CurrentGamesFolder, "Background.png");
-
-                    if (!File.Exists(PossibleWebpPicture))
-                    {
-                        if (!File.Exists(PossiblePngBackgroundPath))
-                        {
-                            //自动加载当前背景图，因为满足LogicName且并未设置背景图
-                            await AutoUpdateBackgroundPicture(CurrentGameName);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.ToString();
-            }
-
-        }
-
+      
         private void SelectGameIconToCurrentGame()
         {
             int i = 0;

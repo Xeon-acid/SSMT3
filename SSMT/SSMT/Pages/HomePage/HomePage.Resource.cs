@@ -295,6 +295,7 @@ namespace SSMT
             if (File.Exists(NewWebpBackgroundPath))
             {
                 ShowBackgroundPicture(NewWebpBackgroundPath);
+
             }
 
         }

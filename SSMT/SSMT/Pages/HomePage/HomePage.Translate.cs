@@ -148,6 +148,9 @@ namespace SSMT
 
                 ToggleSwitch_PureGameMode.OnContent = "开启";
                 ToggleSwitch_PureGameMode.OffContent = "关闭";
+
+                TextBlock_OtherSettings.Text = "其它设置";
+                TextBlock_BasicSettings.Text = "基础设置";
             }
             else
             {
@@ -264,8 +267,10 @@ namespace SSMT
                 SettingsCard_PureGameMode.Description = "Start game without using 3dmigoto";
 
                 ToggleSwitch_PureGameMode.OnContent = "Enable"; 
-                ToggleSwitch_PureGameMode.OffContent = "Disable"; 
+                ToggleSwitch_PureGameMode.OffContent = "Disable";
 
+                TextBlock_OtherSettings.Text = "Other Settings";
+                TextBlock_BasicSettings.Text = "Basic Settings";
             }
         }
 

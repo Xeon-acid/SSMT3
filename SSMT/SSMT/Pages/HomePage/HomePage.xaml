@@ -182,74 +182,96 @@ The following sets the maximum # of items to show before wrapping.-->
                     Orientation="Vertical" 
                     HorizontalAlignment="Stretch">
 
-                    <controls:SettingsCard x:Name="SettingsCard_GameName">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe7fc;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
+                    <Expander
+                        HorizontalContentAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <StackPanel Margin="10">
+                                <TextBlock 
+                                    x:Name="TextBlock_BasicSettings"
+                                    FontSize="14" 
+                                    FontWeight="Bold"/>
+                            </StackPanel>
+                        </Expander.Header>
 
                         <StackPanel Orientation="Vertical">
-                            <ComboBox
-                                HorizontalAlignment="Stretch"
-                                Margin="5"
-                                x:Name="ComboBox_GameName"
-                                SelectionChanged="ComboBox_GameName_SelectionChanged"
-                                IsEditable="True">
-                            </ComboBox>
+                            <controls:SettingsCard x:Name="SettingsCard_GameName">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe7fc;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
 
-                            <StackPanel Orientation="Horizontal">
-                                <Button 
-                                    Margin="5"
-                                    x:Name="Button_CreateNewGame"
-                                    Click="Button_CreateNewGame_Click"
-                                    >
-                                </Button>
+                                <StackPanel Orientation="Vertical">
+                                    <ComboBox
+                                        HorizontalAlignment="Stretch"
+                                        Margin="5"
+                                        x:Name="ComboBox_GameName"
+                                        SelectionChanged="ComboBox_GameName_SelectionChanged"
+                                        IsEditable="True">
+                                    </ComboBox>
 
-                                <Button 
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button 
+                                            Margin="5"
+                                            x:Name="Button_CreateNewGame"
+                                            Click="Button_CreateNewGame_Click"
+                                            >
+                                        </Button>
+
+                                        <Button 
+                                            Margin="5"
+                                            x:Name="Button_DeleteSelectedGame"
+                                            Click="Button_DeleteSelectedGame_Click"
+                                            >
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard x:Name="SettingsCard_LogicName">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xEb44;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ComboBox 
+                                    HorizontalAlignment="Stretch"
                                     Margin="5"
-                                    x:Name="Button_DeleteSelectedGame"
-                                    Click="Button_DeleteSelectedGame_Click"
+                                    x:Name="ComboBox_LogicName"
+                                    SelectionChanged="ComboBox_LogicName_SelectionChanged">
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard  x:Name="SettingsCard_GameTypeFolder">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xf003;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ComboBox
+                                    SelectionChanged="ComboBox_GameTypeFolder_SelectionChanged"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="5"
+                                    x:Name="ComboBox_GameTypeFolder"
                                     >
-                                </Button>
-                            </StackPanel>
+
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
+
+
                         </StackPanel>
+                    </Expander>
 
 
-                    </controls:SettingsCard>
 
-                    <controls:SettingsCard x:Name="SettingsCard_LogicName">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xEb44;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <ComboBox 
-                            HorizontalAlignment="Stretch"
-                            Margin="5"
-                            x:Name="ComboBox_LogicName"
-                            SelectionChanged="ComboBox_LogicName_SelectionChanged">
-                        </ComboBox>
-
-
-                    </controls:SettingsCard>
-
-                    <controls:SettingsCard  x:Name="SettingsCard_GameTypeFolder">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xf003;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <ComboBox
-                            SelectionChanged="ComboBox_GameTypeFolder_SelectionChanged"
-                            HorizontalAlignment="Stretch"
-                            Margin="5"
-                            x:Name="ComboBox_GameTypeFolder"
-                            >
-
-                        </ComboBox>
-
-
-                    </controls:SettingsCard>
+                    
 
                    
                    
@@ -343,231 +365,252 @@ The following sets the maximum # of items to show before wrapping.-->
 
 
 
-                           
+                            <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xf19d;"   FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+
+
+                                <ComboBox x:Name="ComboBox_ShowWarning" SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
+                                    <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
+                                    <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe71b;"   FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+
+
+                                <ComboBox 
+                                    SelectionChanged="ComboBox_Symlink_SelectionChanged"
+                                    x:Name="ComboBox_Symlink">
+                                    <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
+                                    <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard 
+                                x:Name="SettingsCard_DllReplace"
+                                Description=""
+                                Header="">
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xEfa5;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ComboBox 
+                                    SelectionChanged="ComboBox_DllReplace_SelectionChanged"
+                                    x:Name="ComboBox_DllReplace" 
+                                    >
+                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev" />
+                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play" />
+                                    <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None" />
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
+
+
+                            <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
+
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE745;"  FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ComboBox  
+                                    SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
+                                    x:Name="ComboBox_DllPreProcess">
+                                    <ComboBoxItem x:Name="ComboBox_DllPreProcess_None" />
+                                    <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX" />
+                                </ComboBox>
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe964;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+
+                                <NumberBox 
+                                    Margin="5"
+                                    SmallChange="10"
+                                    LargeChange="100"
+                                    x:Name="NumberBox_DllInitializationDelay"
+                                    LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe736;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+
+                                <ComboBox 
+                                    SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
+                                    x:Name="ComboBox_AutoSetAnalyseOptions">
+                                    <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
+                                    <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
+                                </ComboBox>
+
+
+                            </controls:SettingsCard>
 
                         </StackPanel>
 
                     </Expander>
                     
-                        <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xf19d;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-                            
-
-                            <ComboBox x:Name="ComboBox_ShowWarning" SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
-                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
-                            </ComboBox>
+                      
 
 
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe71b;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-                                
-
-                            <ComboBox 
-                                SelectionChanged="ComboBox_Symlink_SelectionChanged"
-                                x:Name="ComboBox_Symlink">
-                                <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
-                            </ComboBox>
 
 
-                        </controls:SettingsCard>
+                    <Expander
+                        HorizontalContentAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <StackPanel Margin="10">
+                                <TextBlock 
+                                    x:Name="TextBlock_OtherSettings"
+                                    FontSize="14" 
+                                    FontWeight="Bold"/>
+                            </StackPanel>
+                        </Expander.Header>
 
-                        <controls:SettingsCard 
-                            x:Name="SettingsCard_DllReplace"
-                            Description=""
-                            Header="">
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xEfa5;" FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
+                        <StackPanel Orientation="Vertical">
 
-                            <ComboBox 
-                                SelectionChanged="ComboBox_DllReplace_SelectionChanged"
-                                x:Name="ComboBox_DllReplace" 
-                                >
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev" />
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play" />
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None" />
-                            </ComboBox>
+                            <controls:SettingsCard x:Name="SettingsCard_ClearGICache">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xed62;"  FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
 
-
-                        </controls:SettingsCard>
-
-
-                        <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
-
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE745;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-                            <ComboBox 
-                                SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
-                                    
-                                x:Name="ComboBox_DllPreProcess">
-                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_None" />
-                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX" />
-                            </ComboBox>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe964;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-
-                            <NumberBox 
-                                Margin="5"
-                                SmallChange="10"
-                                LargeChange="100"
-                                x:Name="NumberBox_DllInitializationDelay"
-                                LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe736;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-
-                            <ComboBox 
-                                SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
-                                x:Name="ComboBox_AutoSetAnalyseOptions">
-                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
-                            </ComboBox>
-
-
-                        </controls:SettingsCard>
-
-                    <controls:SettingsCard x:Name="SettingsCard_ClearGICache">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xed62;"  FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <Button
+                                <Button
                             Click="Button_CleanGICache_Click"
                             x:Name="Button_CleanGICache"
                             Margin="5"/>
 
-                    </controls:SettingsCard>
+                            </controls:SettingsCard>
 
-                    <controls:SettingsCard x:Name="SettingsCard_RunIgnoreGIError40">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xea0d;"     
-                FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
+                            <controls:SettingsCard x:Name="SettingsCard_RunIgnoreGIError40">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xea0d;"  FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <Button
+                                    Click="Button_RunIgnoreGIError40_Click"
+                                    x:Name="Button_RunIgnoreGIError40"
+                                    Margin="5"
+                                    ></Button>
+
+                            </controls:SettingsCard>
+                            
+                            <controls:SettingsCard  x:Name="SettingsCard_AutoUpdateBackground">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe8ba;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Click="Button_CheckBGUpdate_Click"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Margin="5"
+                                        x:Name="Button_AutoUpdateBackground"
+                                        />
+
+                                    <ProgressRing 
+                                        Visibility="Collapsed"
+                                        x:Name="ProgressRing_AutoUpdateBackground"
+                                        IsActive="True"></ProgressRing>
+
+                                </StackPanel>
 
 
 
-                        <Button
-                            Click="Button_RunIgnoreGIError40_Click"
-                            x:Name="Button_RunIgnoreGIError40"
-                            Margin="5"
-                            ></Button>
+                            </controls:SettingsCard>
 
-                    </controls:SettingsCard>
+                            <controls:SettingsCard  x:Name="SettingsCard_SelectBackgroundPicture">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe8b9;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
 
-                    <controls:SettingsCard  x:Name="SettingsCard_AutoUpdateBackground">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe8ba;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                Click="Button_CheckBGUpdate_Click"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="5"
-                                x:Name="Button_AutoUpdateBackground"
-                                />
+                                <Button
+                                    Click="Button_SelectBackgroundFile_Click"
+                                    x:Name="Button_SelectBackgroundFile"
+                                    Margin="5"/>
 
-                            <ProgressRing 
-                                Visibility="Collapsed"
-                                x:Name="ProgressRing_AutoUpdateBackground"
-                                IsActive="True"></ProgressRing>
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard  x:Name="SettingsCard_ShowIcon">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xeca5;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ToggleSwitch
+                                    Toggled="ToggleSwitch_ShowIcon_Toggled"
+                                    Margin="5"
+                                    x:Name="ToggleSwitch_ShowIcon"
+                                    >
+                                </ToggleSwitch>
+
+
+                            </controls:SettingsCard>
+
+                            <controls:SettingsCard  x:Name="SettingsCard_SelectIconFile">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xecaa;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <Button
+                                    Click="Button_ChooseGameIcon_Click"
+                                    Margin="5"
+                                    x:Name="Button_ChooseGameIcon"
+                                    />
+
+                            </controls:SettingsCard>
+
+
+
+                            <controls:SettingsCard  x:Name="SettingsCard_PureGameMode">
+                                <!-- 这里换成你查到的编码 -->
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xe790;" FontFamily="Segoe Fluent Icons"/>
+                                </controls:SettingsCard.HeaderIcon>
+
+                                <ToggleSwitch x:Name="ToggleSwitch_PureGameMode" Toggled="ToggleSwitch_PureGameMode_Toggled"></ToggleSwitch>
+
+
+                            </controls:SettingsCard>
+                            
                             
                         </StackPanel>
-
-                        
-
-                    </controls:SettingsCard>
-
-                    <controls:SettingsCard  x:Name="SettingsCard_SelectBackgroundPicture">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe8b9;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
+                    </Expander>
 
 
-                        <Button
-                            Click="Button_SelectBackgroundFile_Click"
-                            x:Name="Button_SelectBackgroundFile"
-                            Margin="5"/>
 
-                    </controls:SettingsCard>
-
-                    <controls:SettingsCard  x:Name="SettingsCard_ShowIcon">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xeca5;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <ToggleSwitch
-                            Toggled="ToggleSwitch_ShowIcon_Toggled"
-                            Margin="5"
-                            x:Name="ToggleSwitch_ShowIcon"
-                            >
-                        </ToggleSwitch>
+                    
 
 
-                    </controls:SettingsCard>
-
-                    <controls:SettingsCard  x:Name="SettingsCard_SelectIconFile">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xecaa;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <Button
-                            Click="Button_ChooseGameIcon_Click"
-                            Margin="5"
-                            x:Name="Button_ChooseGameIcon"
-                            />
-
-                    </controls:SettingsCard>
-
-                    <controls:SettingsCard  x:Name="SettingsCard_PureGameMode">
-                        <!-- 这里换成你查到的编码 -->
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe790;" FontFamily="Segoe Fluent Icons"/>
-                        </controls:SettingsCard.HeaderIcon>
-
-                        <ToggleSwitch x:Name="ToggleSwitch_PureGameMode" Toggled="ToggleSwitch_PureGameMode_Toggled"></ToggleSwitch>
-
-
-                    </controls:SettingsCard>
 
 
 
