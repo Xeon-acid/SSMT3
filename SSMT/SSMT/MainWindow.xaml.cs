@@ -4,15 +4,14 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json.Linq;
 using SSMT.SSMTHelper;
 using SSMT_Core;
+using SSMT_Core.InfoItemClass;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,10 +19,13 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
 using Windows.Graphics.Display;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.UI;
 using Windows.UI.WindowManagement;
 using WinRT;
@@ -40,16 +42,40 @@ namespace SSMT
     public sealed partial class MainWindow : Window
     {
         //public Image MainWindowImageBrushW;
+        /// <summary>
+        /// 视觉效果组件
+        /// </summary>
+        private Visual imageVisual;
 
+        /// <summary>
+        /// 背景透明效果控制器
+        /// </summary>
         public DesktopAcrylicController _controller;
 
         public static MainWindow CurrentWindow;
-        
+
+        public Image MainWindowImageBrushW;
+
+        public MediaPlayerElement MainWindowBackgroundMediaPlayer;
+
+        //TODO IsLoopingEnabled有个严重的问题就是循环播放时，会卡顿一瞬间
+        //但是米哈游启动器就不卡，这个基本上就是WinUI3这个MediaPlayer实现的问题
+        //暂时先不解决，不碰底层的情况下，不是轻易能解决的。
+        //咱先解决有没有的问题，再解决好不好的问题。
+        MediaPlayer BackgroundMediaPlayer = new MediaPlayer
+        {
+            IsLoopingEnabled = true,
+        };
+
 
         public MainWindow()
         {
-
+            
             this.InitializeComponent();
+
+            // 初始化Composition组件
+            // 获取Image控件的Visual对象
+            imageVisual = ElementCompositionPreview.GetElementVisual(MainWindowImageBrush);
 
             //全局配置文件夹不存在就创建一个
             if (!Directory.Exists(PathManager.Path_SSMT3GlobalConfigsFolder))
@@ -58,12 +84,6 @@ namespace SSMT
             }
 
             CurrentWindow = this;
-
-            //为了最大程度提升用户体验，这个标题栏必须的显示出来，不能隐藏
-            //因为右上角的几个按钮，经常会由于使用透明背景等等原因，和背景融为一体
-            //导致用户无法找到关闭按钮等，体验极差。
-            //SSMT首先是一个生产力工具，其次才是一个炫酷的工具。
-            //this.ExtendsContentIntoTitleBar = true;
 
             
             // 1. 把窗口变成可以挂系统背景的目标
@@ -213,6 +233,8 @@ namespace SSMT
 
                 // 否则导航到设置页
                 contentFrame.Navigate(typeof(SettingsPage));
+
+                ResetBackground();
             }
             else if (args.InvokedItemContainer is NavigationViewItem item)
             {
@@ -245,6 +267,12 @@ namespace SSMT
                 }
 
                 if (pageType != null) {
+
+                    if (pageType != typeof(HomePage))
+                    {
+                        ResetBackground();
+                    }
+
                     if (contentFrame.Content?.GetType() != pageType)
                     {
                         //如果当前点击的页面不是当前页面，就跳转到目标页面
@@ -372,6 +400,8 @@ namespace SSMT
             }
 
         }
+
+
 
 
     }

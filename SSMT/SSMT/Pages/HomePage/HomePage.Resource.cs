@@ -18,14 +18,7 @@ namespace SSMT
     public partial class HomePage
     {
 
-        //TODO IsLoopingEnabled有个严重的问题就是循环播放时，会卡顿一瞬间
-        //但是米哈游启动器就不卡，这个基本上就是WinUI3这个MediaPlayer实现的问题
-        //暂时先不解决，不碰底层的情况下，不是轻易能解决的。
-        //咱先解决有没有的问题，再解决好不好的问题。
-        MediaPlayer BackgroundMediaPlayer = new MediaPlayer
-        {
-            IsLoopingEnabled = true,
-        };
+       
 
 
         private async void Button_CheckMigotoPackageUpdate_Click(object sender, RoutedEventArgs e)
@@ -127,178 +120,12 @@ namespace SSMT
             }
         }
 
-        public void ShowBackgroundVideo(string path)
-        {
-            ResetBackground();
-
-            BackgroundVideo.Visibility = Visibility.Visible;
-
-            // 刷新 Uri，避免 WinUI3 缓存旧版本
-            var uri = new Uri(path + "?t=" + DateTime.Now.Ticks);
-
-            BackgroundMediaPlayer.Source = MediaSource.CreateFromUri(uri);
-            BackgroundVideo.SetMediaPlayer(BackgroundMediaPlayer);
-
-            BackgroundMediaPlayer.Play();
-
-            VisualHelper.CreateFadeAnimation(BackgroundVideo);
-        }
-
-
-        public void ShowBackgroundPicture(string path)
-        {
-            ResetBackground();
-
-            MainWindowImageBrush.Visibility = Visibility.Visible;
-
-            VisualHelper.CreateScaleAnimation(imageVisual);
-            VisualHelper.CreateFadeAnimation(imageVisual);
-
-            // 强制刷新图片链接（你之前已有相同逻辑）
-            MainWindowImageBrush.Source =
-                new BitmapImage(new Uri(path + "?t=" + DateTime.Now.Ticks));
-        }
-
-
-
-
-        private async Task AutoUpdateBackgroundPicture(string SpecificLogicName = "")
-        {
-            ResetBackground();
-            string GameId = HoyoBackgroundUtils.GetGameId(SpecificLogicName, GlobalConfig.Chinese);
-
-            if (GameId == "")
-            {
-                _ = SSMTMessageHelper.Show("当前选择的执行逻辑: " + SpecificLogicName + " 暂不支持自动更新背景图，请手动设置。");
-                return;
-            }
-
-            string BaseUrl = HoyoBackgroundUtils.GetBackgroundUrl(GameId, GlobalConfig.Chinese);
-            //webm不一定存在，所以直接try catch，出错就懒得管了
-
-            bool UseWebmBackground = false;
-
-            //TODO 注意，绝区零的背景图视频有毛病，虽然都是.webm格式，但是只能在浏览器中播放，无法使用本地的媒体播放器播放
-            //这意味着我们必须添加ffmpeg转码，下载下来之后执行转换，变为mp4视频，然后再应用为背景图，因为我实际测试发现WinUI3也是无法播放的
-            //因为WinUI3用的就是系统的解码，底层都是一个东西导致的。
-            //有点麻烦了，而且动态背景图本身就存在循环播放一瞬间卡顿的问题，而且暂时没法解决
-            //综合来说，解决这个问题收益不大，暂时不实现了，随缘等一个热爱ZZZ的开发者提PR实现一下
-
-            // PxncAcd: 您猜怎么着, 解决了
-
-
-            try
-            {
-                string NewWebmBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebmBackground(BaseUrl);
-
-                if (File.Exists(NewWebmBackgroundPath))
-                {
-                    UseWebmBackground = true;
-                }
-
-                string finalVideoPath = NewWebmBackgroundPath;
-
-                if (SpecificLogicName == LogicName.ZZMI)
-                {
-                    // For ZZZ: cannot decode .webm → must transcode to mp4 via ffmpeg.
-
-                    try
-                    {
-                        string ffmpegPath = Path.Combine(AppContext.BaseDirectory, "Plugins", "ffmpeg.exe");
-                        if (!File.Exists(ffmpegPath))
-                        {
-                            LOG.Info("ffmpeg.exe 不存在，无法进行 ZZZ 背景视频转码");
-                            throw new FileNotFoundException("ffmpeg.exe missing");
-                        }
-
-                        string mp4Output = Path.ChangeExtension(NewWebmBackgroundPath, ".mp4");
-
-                        var psi = new ProcessStartInfo
-                        {
-                            FileName = ffmpegPath,
-                            Arguments = $"-y -i \"{NewWebmBackgroundPath}\" -c:v libx264 -preset veryfast -pix_fmt yuv420p \"{mp4Output}\"",
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true
-                        };
-
-                        using (var p = new Process())
-                        {
-                            p.StartInfo = psi;
-
-                            p.OutputDataReceived += (s, e) =>
-                            {
-                                if (!string.IsNullOrEmpty(e.Data))
-                                    LOG.Info("[ffmpeg stdout] " + e.Data);
-                            };
-
-                            p.ErrorDataReceived += (s, e) =>
-                            {
-                                if (!string.IsNullOrEmpty(e.Data))
-                                    LOG.Info("[ffmpeg stderr] " + e.Data);
-                            };
-
-                            p.Start();
-
-                            p.BeginOutputReadLine();
-                            p.BeginErrorReadLine();
-
-                            await p.WaitForExitAsync();
-
-                            if (p.ExitCode != 0 || !File.Exists(mp4Output))
-                                throw new Exception($"ffmpeg failed, exit code {p.ExitCode}");
-
-                            LOG.Info("ZZZ 背景视频已成功由 webm 转为 mp4");
-                            finalVideoPath = mp4Output;
-                            // delete webm
-                            try
-                            {
-                                File.Delete(NewWebmBackgroundPath);
-                            }
-                            catch (Exception delEx)
-                            {
-                                LOG.Info("删除中间 webm 文件失败: " + delEx.Message);
-                            }
-
-                        }
-                    }
-                    catch (Exception innerEx)
-                    {
-                        LOG.Info("ZZZ 背景视频转码失败，fallback handler 触发: " + innerEx.Message);
-                        // finalVideoPath = FigFallbackHandler(NewWebmBackgroundPath);
-                    }
-                }
-
-                ShowBackgroundVideo(finalVideoPath);
-                LOG.Info("设置好背景图视频了");
-            }
-            catch (Exception ex)
-            {
-                LOG.Info(ex.ToString());
-            }
 
 
 
 
 
-
-            //如果使用上了视频背景图，那就不用管后面的内容了
-            if (UseWebmBackground)
-            {
-                LOG.Info("用上视频背景图了，后面内容不管了");
-                return;
-            }
-
-            //否则使用普通背景图
-            string NewWebpBackgroundPath = await HoyoBackgroundUtils.DownloadLatestWebpBackground(BaseUrl);
-            if (File.Exists(NewWebpBackgroundPath))
-            {
-                ShowBackgroundPicture(NewWebpBackgroundPath);
-
-            }
-
-        }
+       
 
         private async void Button_CheckBGUpdate_Click(object sender, RoutedEventArgs e)
         {
@@ -306,7 +133,7 @@ namespace SSMT
             {
                 ProgressRing_AutoUpdateBackground.Visibility = Visibility.Visible;
                 Button_AutoUpdateBackground.IsEnabled = false;
-                await AutoUpdateBackgroundPicture(ComboBox_LogicName.SelectedItem.ToString());
+                await MainWindow.CurrentWindow.AutoUpdateBackgroundPicture(ComboBox_LogicName.SelectedItem.ToString());
                 _ = SSMTMessageHelper.Show("背景图更新成功");
                 Button_AutoUpdateBackground.IsEnabled = true;
                 ProgressRing_AutoUpdateBackground.Visibility = Visibility.Collapsed;
@@ -349,14 +176,14 @@ namespace SSMT
                     string NewBackgroundPath = Path.Combine(folder, "Background" + ext);
                     File.Copy(filepath, NewBackgroundPath, true);
 
-                    ShowBackgroundPicture(NewBackgroundPath);
+                    MainWindow.CurrentWindow.ShowBackgroundPicture(NewBackgroundPath);
                 }
                 else if (ext == ".mp4" || ext == ".webm")
                 {
                     string NewBackgroundPath = Path.Combine(folder, "Background" + ext);
                     File.Copy(filepath, NewBackgroundPath, true);
 
-                    ShowBackgroundVideo(NewBackgroundPath);
+                    MainWindow.CurrentWindow.ShowBackgroundVideo(NewBackgroundPath);
                 }
                 else
                 {
@@ -370,22 +197,6 @@ namespace SSMT
         }
 
 
-        private void ResetBackground()
-        {
-            try
-            {
-                // 停止播放并清空媒体
-                BackgroundMediaPlayer.Pause();
-                BackgroundMediaPlayer.Source = null;
-            }
-            catch { }
-
-            // 隐藏视频
-            BackgroundVideo.Visibility = Visibility.Collapsed;
-
-            // 清空静态图
-            MainWindowImageBrush.Visibility = Visibility.Collapsed;
-            MainWindowImageBrush.Source = null;
-        }
+     
     }
 }

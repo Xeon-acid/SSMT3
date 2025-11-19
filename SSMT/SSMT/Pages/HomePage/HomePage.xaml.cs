@@ -41,10 +41,7 @@ namespace SSMT
         /// </summary>
         private ObservableCollection<GameIconItem> GameIconItemList = new ObservableCollection<GameIconItem>();
 
-        /// <summary>
-        /// 视觉效果组件
-        /// </summary>
-        private Visual imageVisual;
+
 
         /// <summary>
         /// 用于控制当前状态是否处于读取配置过程中，以此防止内容改变时触发方法然后递归的改变。
@@ -63,9 +60,7 @@ namespace SSMT
         private void HomePageLoaded(object sender, RoutedEventArgs e)
         {
 
-            // 初始化Composition组件
-            // 获取Image控件的Visual对象
-            imageVisual = ElementCompositionPreview.GetElementVisual(MainWindowImageBrush);
+            
 
             GameIconGridView.ItemsSource = GameIconItemList;
 
@@ -228,7 +223,7 @@ namespace SSMT
 
             //背景图放到最后更新，没必要更新那么早
             //根据当前游戏，初始化背景图或者背景视频
-            await InitializeBackground();
+            await MainWindow.CurrentWindow.InitializeBackground();
 
         }
      

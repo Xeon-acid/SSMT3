@@ -12,7 +12,19 @@
 
     <Grid>
 
-        <!--<Image 
+        <!-- 背景视频 -->
+        <MediaPlayerElement 
+            x:Name="BackgroundVideo"
+            Grid.ColumnSpan="2"
+            Grid.RowSpan="2"
+            AreTransportControlsEnabled="False"
+            AutoPlay="False"
+            IsHitTestVisible="False"
+            Stretch="UniformToFill"
+            Visibility="Collapsed" />
+
+        <!-- 背景图片 -->
+        <Image 
             HorizontalAlignment="Right"
             RenderTransformOrigin="0.5,0.5"
             Grid.ColumnSpan="2"
@@ -22,7 +34,9 @@
             <Image.RenderTransform>
                 <ScaleTransform />
             </Image.RenderTransform>
-        </Image>-->
+        </Image>
+        
+        
 
         <!-- 导航栏 -->
         <NavigationView  
@@ -33,7 +47,7 @@
             BackRequested="nvSample_BackRequested"
             IsBackEnabled="{Binding ElementName=contentFrame,Path=CanGoBack}" 
             IsBackButtonVisible="Collapsed">
-            
+
             <Grid>
                 <Frame 
                     x:Name="contentFrame"

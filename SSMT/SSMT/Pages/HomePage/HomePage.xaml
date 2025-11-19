@@ -21,7 +21,10 @@
     
     <!--WinUI3所有的东西都在CommunityToolkit里，
     然后也没有一个可靠的文档来告诉萌新在哪里可以获取，
-    只有几个很久都不更新的Gallary程序勉强能参考-->
+    只有几个很久都不更新的Gallary程序勉强能参考
+    
+    目前入门阶段最优解是直接学其他人项目里的用法，以及硬啃Community包的源码(首先我懒得啃)。
+    -->
 
     <Grid >
         <!-- 定义行 -->
@@ -35,7 +38,7 @@
             <ColumnDefinition Width="0.3*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- 背景视频 -->
+        <!-- 背景视频 --><!--
         <MediaPlayerElement 
             x:Name="BackgroundVideo"
             Grid.ColumnSpan="2"
@@ -46,7 +49,7 @@
             Stretch="UniformToFill"
             Visibility="Collapsed" />
 
-        <!-- 背景图片 -->
+        --><!-- 背景图片 --><!--
         <Image 
             HorizontalAlignment="Right"
             RenderTransformOrigin="0.5,0.5"
@@ -57,7 +60,7 @@
             <Image.RenderTransform>
                 <ScaleTransform />
             </Image.RenderTransform>
-        </Image>
+        </Image>-->
 
       
 
