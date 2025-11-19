@@ -109,8 +109,8 @@ namespace SSMT
                 Button_RunLaunchPath.Content = " 开始游戏";
                 ToolTipService.SetToolTip(Button_RunLaunchPath, "先进行一系列配置工作，然后运行3Dmigoto Loader，然后运行启动路径中填写的程序");
 
-                Button_RunLaunchPath_Without3DM.Content = "仅启动游戏";
-                ToolTipService.SetToolTip(Button_RunLaunchPath_Without3DM, "直接运行启动路径中填写的程序, 不启动3DMigoto Loader");
+                //Button_RunLaunchPath_Without3DM.Content = "仅启动游戏";
+                //ToolTipService.SetToolTip(Button_RunLaunchPath_Without3DM, "直接运行启动路径中填写的程序, 不启动3DMigoto Loader");
 
 
                 SettingsCard_DllInitializationDelay.Header = "d3d11.dll初始化延迟";
@@ -143,6 +143,11 @@ namespace SSMT
 
                 Button_RunIgnoreGIError40.Content = "启动网络加固插件";
 
+                SettingsCard_PureGameMode.Header = "纯净游戏模式";
+                SettingsCard_PureGameMode.Description = "开启纯净游戏模式后【开始游戏】按钮将不再启动3Dmigoto，仅启动游戏";
+
+                ToggleSwitch_PureGameMode.OnContent = "开启";
+                ToggleSwitch_PureGameMode.OffContent = "关闭";
             }
             else
             {
@@ -252,8 +257,14 @@ namespace SSMT
 
                 Button_RunLaunchPath.Content = " Start Game";
 
-                Button_RunLaunchPath_Without3DM.Content = "Only Start Game";
-                ToolTipService.SetToolTip(Button_RunLaunchPath_Without3DM, "Only Launch Program wroten in Launch Path, without Launching 3DMigoto Loader");
+                //Button_RunLaunchPath_Without3DM.Content = "Only Start Game";
+                //ToolTipService.SetToolTip(Button_RunLaunchPath_Without3DM, "Only Launch Program wroten in Launch Path, without Launching 3DMigoto Loader");
+
+                SettingsCard_PureGameMode.Header = "Pure Game Mode";
+                SettingsCard_PureGameMode.Description = "Start game without using 3dmigoto";
+
+                ToggleSwitch_PureGameMode.OnContent = "Enable"; 
+                ToggleSwitch_PureGameMode.OffContent = "Disable"; 
 
             }
         }

@@ -53,6 +53,8 @@ namespace SSMT
 
         public int AutoSetAnalyseOptionsSelectedIndex { get; set; } = 0;
 
+        public bool PureGameMode = false;
+
         public string GithubPackageVersion { get; set; } = "";
 
         public int DllInitializationDelay { get; set; } = 500;
@@ -162,6 +164,12 @@ namespace SSMT
                     this.DllPreProcessSelectedIndex = DllPreProcessSelectedIndex;
                 }
 
+                //PureGameMode
+                if (jobj.ContainsKey("PureGameMode"))
+                {
+                    this.PureGameMode = (bool)jobj["PureGameMode"];
+                }
+
                 //LaunchItems
                 if (jobj.ContainsKey("LaunchItems"))
                 {
@@ -225,6 +233,8 @@ namespace SSMT
             jobj["DllInitializationDelay"] = this.DllInitializationDelay;
             jobj["DllReplaceSelectedIndex"] = this.DllReplaceSelectedIndex;
             jobj["DllPreProcessSelectedIndex"] = this.DllPreProcessSelectedIndex;
+
+            jobj["PureGameMode"] = this.PureGameMode;
 
             jobj["LaunchItems"] = jobjArray;
             DBMTJsonUtils.SaveJObjectToFile(jobj, PathManager.Path_CurrentGameConfigJson);

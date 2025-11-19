@@ -385,54 +385,7 @@ namespace SSMT
 
 
 
-        private void SyncD3D11DllFile()
-        {
-            try
-            {
-                //这个函数只会在初始化的时候调用，所以默认复制Dev版本的d3d11.dll
-                string DllModeFolderName = "ReleaseX64Dev";
-
-                if (ComboBox_DllReplace.SelectedIndex == 1)
-                {
-                    //如果是Play版本，则复制Play版本的d3d11.dll
-                    DllModeFolderName = "ReleaseX64Play";
-                }
-
-
-                string MigotoSourceDll = Path.Combine(PathManager.Path_AssetsFolder, DllModeFolderName + "\\d3d11.dll");
-
-
-                string MigotoFolder = Path.Combine(GlobalConfig.SSMTCacheFolderPath, "3Dmigoto\\");
-                Directory.CreateDirectory(MigotoFolder);
-
-                string TargetCopyDllDir = Path.Combine(MigotoFolder, GlobalConfig.CurrentGameName);
-
-
-
-                if (TextBox_3DmigotoPath.Text.Trim() != "")
-                {
-                    if (Directory.Exists(TextBox_3DmigotoPath.Text))
-                    {
-                        TargetCopyDllDir = TextBox_3DmigotoPath.Text;
-                    }
-                }
-
-                string MigotoTargetDll = Path.Combine(TargetCopyDllDir, "d3d11.dll");
-
-                //0是Dev 1是Play 2是None，所以只有0和1时才替换d3d11.dll
-                if (ComboBox_DllReplace.SelectedIndex == 0 || ComboBox_DllReplace.SelectedIndex == 1)
-                {
-                    File.Copy(MigotoSourceDll, MigotoTargetDll, true);
-                }
-                
-            }
-            catch(Exception ex)
-            {
-
-                _ = SSMTMessageHelper.Show(ex.ToString());
-            }
-            
-        }
+        
 
 
 
@@ -475,6 +428,9 @@ namespace SSMT
             {
                 string targetDll = File.Exists(MigotoSource47Dll) ? MigotoTarget47Dll : MigotoTarget46Dll;
                 string sourceDll = File.Exists(MigotoSource47Dll) ? MigotoSource47Dll : MigotoSource46Dll;
+
+                //47只有WWMI用到，46其他游戏用到，后面再写逻辑判断吧。
+
 
                 // 检查文件是否被占用
                 if (File.Exists(targetDll))
@@ -883,6 +839,16 @@ namespace SSMT
 			}
 		}
 
-        
+        private void ToggleSwitch_PureGameMode_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (IsLoading)
+            {
+                return;
+            }
+
+            GameConfig gameConfig = new GameConfig();
+            gameConfig.PureGameMode = ToggleSwitch_PureGameMode.IsOn;
+            gameConfig.SaveConfig();
+        }
     }
 }

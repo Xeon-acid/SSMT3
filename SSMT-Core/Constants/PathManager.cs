@@ -15,6 +15,24 @@ namespace SSMT_Core
         public static string Name_GlobalConfigFileName = "SSMT3-Config.json";
         public static string Name_Plugin_GoodWorkGI = "GoodWorkGI.exe";
 
+        /// <summary>
+        /// 只有咱们SSMT叫LOD.exe，为什么呢？在此记录一下：
+        /// 曾经我们的加载器就是原始的3Dmigoto Loader.exe
+        /// 导致会被d3dxSkinManager强制替换为他们的3DMigoto Loader.exe
+        /// 导致会被原神无条件踢出报错
+        /// 为了避免命名污染问题，直接改个名字，简单点就叫LOD.exe算了，这就是LOD.exe的由来
+        /// </summary>
+        public static string Name_3DmigotoLoaderExe = "LOD.exe";
+
+
+        public static string Path_Default3DmigotoLoaderExe
+        {
+            get
+            {
+                return Path.Combine(PathManager.Path_AssetsFolder, Name_3DmigotoLoaderExe);
+            }
+        }
+
         public static string Path_TexconvExe
         {
             get
