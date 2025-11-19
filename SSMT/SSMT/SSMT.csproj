@@ -10,7 +10,7 @@
     <UseWinUI>true</UseWinUI>
     <Nullable>enable</Nullable>
 	<WindowsPackageType>None</WindowsPackageType>
-	<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	<SelfContained>false</SelfContained>
   </PropertyGroup>
 
