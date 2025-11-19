@@ -1,4 +1,8 @@
 {
-    "errorLens.enabled": false,
-
+    "files.exclude": {
+        "**/*.csproj": true
+    },
+    // "csharp.referencesCodeLens.enabled": false,
+    "problems.visibility": false,
+    "omnisharp.useModernNet": false
 }

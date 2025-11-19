@@ -136,62 +136,142 @@ namespace SSMT
 
         }
 
-        private async void Button_RunLaunchPath_Without3DM_Click(object sender, RoutedEventArgs e)
+        //private async void Button_RunLaunchPath_Without3DM_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (sender is Button button)
+        //    {
+        //        try
+        //        {
+        //            // 禁用按钮，防止重复点击
+        //            button.IsEnabled = false;
+
+        //            GameConfig gameConfig = new GameConfig();
+
+        //            string launchPath = gameConfig.LaunchPath;
+
+        //            if (string.IsNullOrWhiteSpace(launchPath))
+        //            {
+        //                _ = SSMTMessageHelper.Show("请先填写启动路径", "Please set your target path before start");
+        //                return;
+        //            }
+
+        //            if (!File.Exists(launchPath))
+        //            {
+        //                _ = SSMTMessageHelper.Show("启动路径指向的文件不存在");
+        //                return;
+        //            }
+
+        //            // 准备启动信息
+        //            List<RunInfo> runList = new List<RunInfo>();
+
+        //            runList.Add(new RunInfo
+        //            {
+        //                RunPath = launchPath,
+        //                RunWithArguments = gameConfig.LaunchArgs,
+        //                UseShell = true
+        //            });
+
+        //            LOG.Info(launchPath + " (仅启动游戏模式) 添加到启动列表");
+
+        //            // 启动（这里使用和上面一样的统一流程）
+        //            await SSMTCommandHelper.LaunchSequentiallyAsyncV2(runList);
+
+        //            // 等待一会再启用按钮
+        //            await Task.Delay(3000);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            button.IsEnabled = true;
+        //            _ = SSMTMessageHelper.Show(ex.ToString());
+        //        }
+        //        finally
+        //        {
+        //            // 确保按钮恢复
+        //            button.IsEnabled = true;
+        //        }
+        //    }
+        //}
+
+        bool Is3DMItem(ProcessItem item)
         {
-            if (sender is Button button)
+            if (string.IsNullOrWhiteSpace(item.ProcessPath)) return false;
+
+            string s = item.ProcessPath.Trim().ToLower();
+
+            if (!s.Contains("3dm")) return false;
+
+            // 不能包含路径字符
+            if (s.Contains(":") || s.Contains("\\") || s.Contains("/")) return false;
+
+            return true;
+        }
+
+        void StartNormalProcess(ProcessItem item)
+        {
+            try
             {
-                try
+                Process.Start(new ProcessStartInfo
                 {
-                    // 禁用按钮，防止重复点击
-                    button.IsEnabled = false;
-
-                    GameConfig gameConfig = new GameConfig();
-
-                    string launchPath = gameConfig.LaunchPath;
-
-                    if (string.IsNullOrWhiteSpace(launchPath))
-                    {
-                        _ = SSMTMessageHelper.Show("请先填写启动路径", "Please set your target path before start");
-                        return;
-                    }
-
-                    if (!File.Exists(launchPath))
-                    {
-                        _ = SSMTMessageHelper.Show("启动路径指向的文件不存在");
-                        return;
-                    }
-
-                    // 准备启动信息
-                    List<RunInfo> runList = new List<RunInfo>();
-
-                    runList.Add(new RunInfo
-                    {
-                        RunPath = launchPath,
-                        RunWithArguments = gameConfig.LaunchArgs,
-                        UseShell = true
-                    });
-
-                    LOG.Info(launchPath + " (仅启动游戏模式) 添加到启动列表");
-
-                    // 启动（这里使用和上面一样的统一流程）
-                    await SSMTCommandHelper.LaunchSequentiallyAsyncV2(runList);
-
-                    // 等待一会再启用按钮
-                    await Task.Delay(3000);
-                }
-                catch (Exception ex)
-                {
-                    button.IsEnabled = true;
-                    _ = SSMTMessageHelper.Show(ex.ToString());
-                }
-                finally
-                {
-                    // 确保按钮恢复
-                    button.IsEnabled = true;
-                }
+                    FileName = item.ProcessPath,
+                    Arguments = item.Arguments,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                //LOG.Error(ToString(ex));
             }
         }
 
+        void Start3DMigoto(ProcessItem item)
+        {
+            GameConfig gameCfg = new GameConfig(); // 自动读取当前游戏配置
+            string migoto = gameCfg.MigotoPath;
+
+            string iniPath = Path.Combine(migoto, "d3dx.ini");
+
+            // 写 target（即你的“启动参数”）
+            D3dxIniConfig.SaveAttributeToD3DXIni(iniPath, "[loader]", "target", item.Arguments);
+
+            // 删除 launch（或清空）
+            D3dxIniConfig.SaveAttributeToD3DXIni(iniPath, "[loader]", "launch", "");
+
+            // hunting = 2
+            D3dxIniConfig.SaveAttributeToD3DXIni(iniPath, "[hunting]", "hunting", "2");
+
+            // 拷贝 LOD.exe
+            string lodSrc = Path.Combine(PathManager.Path_AssetsFolder, "LOD.exe");
+            string lodDst = Path.Combine(migoto, "LOD.exe");
+            File.Copy(lodSrc, lodDst, true);
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = lodDst,
+                UseShellExecute = true
+            });
+        }
+
+        async Task RunProcessItemsAsync(List<ProcessItem> items)
+        {
+            foreach (var item in items)
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(item.Delay);
+
+                    if (Is3DMItem(item))
+                        Start3DMigoto(item);
+                    else
+                        StartNormalProcess(item);
+                });
+            }
+        }
+        private async void StartGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            var config = _configManager.CurrentConfig;
+
+            await RunProcessItemsAsync(config.ProcessItems.ToList());
+        }
 
     }
 }

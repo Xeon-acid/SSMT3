@@ -5,6 +5,7 @@ using Microsoft.UI;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -19,9 +20,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using WinUI3Helper;
@@ -51,6 +55,10 @@ namespace SSMT
         /// </summary>
         private bool IsLoading = false;
 
+        public ObservableCollection<LaunchConfig> ConfigList { get; set; }
+        public LaunchConfig SelectedConfig { get; set; }
+
+
 
         public HomePage()
         {
@@ -62,7 +70,7 @@ namespace SSMT
 
         private void HomePageLoaded(object sender, RoutedEventArgs e)
         {
-
+            _configManager = new ProcessConfigManager();
             // 初始化Composition组件
             // 获取Image控件的Visual对象
             imageVisual = ElementCompositionPreview.GetElementVisual(MainWindowImageBrush);
@@ -79,19 +87,24 @@ namespace SSMT
             InitializeGameNameList();
 
             GameNameChanged(GlobalConfig.CurrentGameName);
+
+            InitializeConfigManager();
         }
 
    
 
         private void GameNameChanged(string ChangeToGameName)
         {
-            //清楚顶部InfoBar内容
-			NotificationQueue.Clear();
+            
+            // 清除顶部InfoBar内容
+            NotificationQueue.Clear();
 
             //游戏名称改到目标游戏名称，然后保存配置，这样Blender插件就能实时同步知道游戏发生了变化
 			GlobalConfig.CurrentGameName = ChangeToGameName;
             GlobalConfig.SaveConfig();
 
+            
+            // 是否显示自动更新背景图按钮
             BGAutoUpdateShow();
 
             //根据当前游戏，初始化背景图或者背景视频
@@ -254,34 +267,45 @@ namespace SSMT
         {
             try
             {
-                string CurrentGameName = ComboBox_GameName.SelectedItem.ToString();
+                // 直接用全局配置的游戏名称，不用 ComboBox 的 SelectedItem
+                string CurrentGameName = GlobalConfig.CurrentGameName?.Trim().ToUpperInvariant() ?? "";
+                Debug.WriteLine($"[BGAutoUpdate] 当前游戏名称（来自全局配置）：{CurrentGameName}");
 
-                //if (CurrentGameName == LogicName.GIMI)
-                //{
-                //    Button_AutoUpdateBackgroundOnlyStatic.Visibility = Visibility.Collapsed;
-                //    Button_AutoUpdateBackground.Visibility = Visibility.Visible;
-                //}
-                switch(CurrentGameName)
+                if (string.IsNullOrEmpty(CurrentGameName))
+                {
+                    Debug.WriteLine("[BGAutoUpdate] 游戏名称为空，隐藏两个按钮");
+                    ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                    return;
+                }
+
+                switch (CurrentGameName)
                 {
                     case LogicName.GIMI:
+                        //Debug.WriteLine("[BGAutoUpdate] 匹配 GIMI → 静态按钮显示，自动更新按钮隐藏");
                         ChangeBGButtonIfVisible(Visibility.Visible, Visibility.Collapsed);
                         break;
                     case LogicName.SRMI:
                     case LogicName.HIMI:
                     case LogicName.ZZMI:
+                        //Debug.WriteLine($"[BGAutoUpdate] 匹配 {CurrentGameName} → 两个按钮都显示");
                         ChangeBGButtonIfVisible(Visibility.Visible, Visibility.Visible);
                         break;
                     case LogicName.WWMI:
-                        ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        //Debug.WriteLine("[BGAutoUpdate] 匹配 WWMI → 两个按钮都隐藏");
+                        //ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        SettingsCard_AutoUpdateBackground.Visibility = Visibility.Collapsed;
                         break;
                     default:
-                        ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        //Debug.WriteLine($"[BGAutoUpdate] 未匹配任何游戏（{CurrentGameName}）→ 两个按钮都隐藏");
+                        //ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
+                        SettingsCard_AutoUpdateBackground.Visibility = Visibility.Collapsed;
                         break;
                 }
             }
             catch (Exception ex)
             {
-                ex.ToString();
+                Debug.WriteLine($"[BGAutoUpdate] 报错：{ex.Message} → 隐藏两个按钮");
+                ChangeBGButtonIfVisible(Visibility.Collapsed, Visibility.Collapsed);
             }
         }
         private void ChangeBGButtonIfVisible(Visibility val1, Visibility val2)
@@ -568,14 +592,9 @@ namespace SSMT
 
         private void Button_ShowSetting_Click(object sender, RoutedEventArgs e)
         {
-            if (Border_GameConfig.Visibility == Visibility.Collapsed)
-            {
-                Border_GameConfig.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                Border_GameConfig.Visibility = Visibility.Collapsed;
-            }
+            Border_GameConfig.Visibility = (Border_GameConfig.Visibility == Visibility.Collapsed)?
+                Visibility.Visible : Visibility.Collapsed;
+            Border_ProcessConfig.Visibility = Visibility.Collapsed;
         }
 
 
@@ -926,6 +945,356 @@ namespace SSMT
 			}
 		}
 
+        // 配置管理器实例
+        private ProcessConfigManager _configManager;
+
+        // 配置面板相关事件
+        // 导入配置
+        private async void ImportConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var filePicker = new FileOpenPicker();
+                filePicker.ViewMode = PickerViewMode.List;
+                filePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                filePicker.FileTypeFilter.Add(".json");
+
+                var file = await filePicker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    var json = await FileIO.ReadTextAsync(file);
+                    var importedConfig = JsonSerializer.Deserialize<LaunchConfig>(json);
+
+                    // 检查配置名称是否重复
+                    var existingConfig = _configManager.GetConfigs().FirstOrDefault(c => c.Name == importedConfig.Name);
+                    if (existingConfig != null)
+                    {
+                        importedConfig.Name = $"{importedConfig.Name}_导入_{DateTime.Now:yyyyMMddHHmmss}";
+                    }
+
+                    importedConfig.FilePath = _configManager.GetConfigFilePath(importedConfig.Name);
+                    _configManager.GetConfigs().Add(importedConfig);
+                    _configManager.SaveConfig(importedConfig);
+
+                    //RefreshProcessList();
+                    _ = SSMTMessageHelper.Show("配置导入成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = SSMTMessageHelper.Show($"导入配置失败: {ex.Message}");
+            }
+        }
+
+        // 导出配置
+        private async void ExportConfig_Click(object sender, RoutedEventArgs e)
+        {
+            if (_configManager.CurrentConfig == null) return;
+
+            try
+            {
+                var filePicker = new FileSavePicker();
+                filePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                filePicker.FileTypeChoices.Add("JSON 文件", new List<string> { ".json" });
+                filePicker.SuggestedFileName = $"{_configManager.CurrentConfig.Name}_配置";
+
+                var file = await filePicker.PickSaveFileAsync();
+                if (file != null)
+                {
+                    var json = JsonSerializer.Serialize(_configManager.CurrentConfig, new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+                    await FileIO.WriteTextAsync(file, json);
+                    _ = SSMTMessageHelper.Show("配置导出成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = SSMTMessageHelper.Show($"导出配置失败: {ex.Message}");
+            }
+        }
+
+        // 添加进程项
+        private void AddProcessItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (_configManager.CurrentConfig != null)
+            {
+                _configManager.CurrentConfig.ProcessItems.Add(new ProcessItem
+                {
+                    Index = _configManager.CurrentConfig.ProcessItems.Count + 1,
+                    ProcessPath = "",
+                    Arguments = "",
+                    Delay = 0
+                });
+                Debug.WriteLine(_configManager.CurrentConfig.ProcessItems);
+                //RefreshProcessList();
+            }
+        }
+
+        // 删除进程项
+        private void RemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int index && _configManager.CurrentConfig != null)
+            {
+                var itemToRemove = _configManager.CurrentConfig.ProcessItems.FirstOrDefault(item => item.Index == index);
+                if (itemToRemove != null)
+                {
+                    _configManager.CurrentConfig.ProcessItems.Remove(itemToRemove);
+                    //RefreshProcessList();
+                }
+            }
+        }
+
+        // 上移进程项
+        private void MoveItemUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int index && _configManager.CurrentConfig != null && index > 1)
+            {
+                var items = _configManager.CurrentConfig.ProcessItems;
+                var currentIndex = index - 1;
+                var previousIndex = currentIndex - 1;
+
+                (items[currentIndex], items[previousIndex]) = (items[previousIndex], items[currentIndex]);
+                //RefreshProcessList();
+            }
+        }
+
+        // 下移进程项
+        private void MoveItemDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int index && _configManager.CurrentConfig != null && index < _configManager.CurrentConfig.ProcessItems.Count)
+            {
+                var items = _configManager.CurrentConfig.ProcessItems;
+                var currentIndex = index - 1;
+                var nextIndex = currentIndex + 1;
+
+                (items[currentIndex], items[nextIndex]) = (items[nextIndex], items[currentIndex]);
+                //RefreshProcessList();
+            }
+        }
+
+        private void InitializeConfigManager()
+        {
+            var configs = _configManager.GetConfigs();
+
+            // 转成 ObservableCollection 方便绑定更新
+            ConfigList = new ObservableCollection<LaunchConfig>(configs);
+
+            // 默认选中第一个
+            if (ConfigList.Count > 0)
+                SelectedConfig = ConfigList[0];
+
+            // 绑定 ComboBox
+            ConfigComboBox.ItemsSource = ConfigList;
+            ConfigComboBox.DisplayMemberPath = "Name";
+
+            // 强制刷新 TextBox
+            ConfigInputBox.Text = SelectedConfig?.Name ?? "";
+        }
+
+
+
+
+
+        // 配置面板相关事件
+        private void ConfigComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ConfigComboBox.SelectedItem is LaunchConfig cfg)
+            {
+                SelectedConfig = cfg; // 重要
+                _configManager.CurrentConfig = cfg;
+
+                // 同步输入框
+                ConfigInputBox.Text = cfg.Name;
+
+                // 更新列表绑定
+                ProcessItemsControl.ItemsSource = cfg.ProcessItems;
+            }
+        }
+
+
+        private void AddNewConfig_Click(object sender, RoutedEventArgs e)
+        {
+            var input = ConfigInputBox.Text.Trim();
+            if (input == "")
+                return;
+
+            var existing = ConfigList
+                .FirstOrDefault(c => c.Name.Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            if (existing != null)
+            {
+                // 如果已存在 → 切换
+                SelectedConfig = existing;
+                ConfigComboBox.SelectedItem = existing;
+                return;
+            }
+
+            // 新建配置
+            var newConfig = new LaunchConfig
+            {
+                Name = input,
+                ProcessItems = new ObservableCollection<ProcessItem>()
+            };
+
+            ConfigList.Add(newConfig);
+            SelectedConfig = newConfig;
+            ConfigComboBox.SelectedItem = newConfig;
+        }
+
+
+        private void DeleteConfig_Click(object sender, RoutedEventArgs e)
+        {
+            if (_configManager.CurrentConfig != null)
+            {
+                _configManager.DeleteConfig(_configManager.CurrentConfig);
+            }
+        }
+
+        private void SaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            if (_configManager.CurrentConfig != null)
+            {
+                _configManager.SaveConfig(_configManager.CurrentConfig);
+            }
+        }
+
+        private void CloseConfigPanel_Click(object sender, RoutedEventArgs e)
+        {
+            Border_ProcessConfig.Visibility = Visibility.Collapsed;
+        }
         
+
+        // 下拉菜单按钮事件
+        private void Button_DropDown_Click(object sender, RoutedEventArgs e)
+        {
+            var flyout = new MenuFlyout();
+
+            foreach (var config in _configManager.GetConfigs())
+            {
+                var item = new MenuFlyoutItem
+                {
+                    Text = config.Name,
+                    Tag = config
+                };
+                item.Click += (s, args) =>
+                {
+                    _configManager.CurrentConfig = (s as MenuFlyoutItem)?.Tag as LaunchConfig;
+                    Button_RunLaunchPath.Content = $"执行: {_configManager.CurrentConfig.Name}";
+                };
+                flyout.Items.Add(item);
+            }
+
+            flyout.Items.Add(new MenuFlyoutSeparator());
+
+            var manageItem = new MenuFlyoutItem { Text = "管理配置..." };
+            manageItem.Click += (s, args) => ShowConfigPanel();
+            flyout.Items.Add(manageItem);
+
+            flyout.ShowAt(Button_DropDown);
+        }
+
+        private void ShowConfigPanel()
+        {
+            //Border_ProcessConfig.Visibility = Visibility.Visible;
+            Border_ProcessConfig.Visibility = (Border_ProcessConfig.Visibility == Visibility.Visible) ?
+                Visibility.Collapsed : Visibility.Visible;
+            //RefreshProcessList();
+        }
+
+
+        //private void OnCurrentConfigChanged(LaunchConfig config)
+        //{
+        //    //RefreshProcessList();
+        //}
+
+        //private void RefreshProcessList()
+        //{
+        //    if (_configManager.CurrentConfig != null)
+        //    {
+        //        //ProcessItemsControl.ItemsSource = _configManager.CurrentConfig.ProcessItems;
+        //        _configManager.RefreshProcessListIndex(_configManager.CurrentConfig);
+        //    }
+        //}
+
+        public void SaveGameConfig(string gameName)
+        {
+            // 生成游戏配置文件路径
+            string gameConfigFilePath = Path.Combine(GlobalConfig.SSMTCacheFolderPath, "GameConfigs", gameName, "config.json");
+
+            // 确保文件夹存在
+            if (!Directory.Exists(Path.GetDirectoryName(gameConfigFilePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(gameConfigFilePath));
+            }
+
+            // 创建配置对象
+            var gameConfig = new GameConfig
+            {
+                LogicName = gameName,
+                MigotoPath = "path/to/3dmigoto",
+                TargetPath = "path/to/target",
+                // 设置其他配置项
+            };
+
+            // 保存配置文件
+            File.WriteAllText(gameConfigFilePath, JsonSerializer.Serialize(gameConfig));
+        }
+
+        private void MyDataGrid_CellEditEnding(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridCellEditEndingEventArgs e)
+        {
+            return;
+        }
+
+
+        private void ProcessItem_EditEnding(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridCellEditEndingEventArgs e)
+        {
+            return;
+        }
+
+        private async void SelectProcessFile_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+
+            // 关键：从 DataContext 拿到当前 ProcessItem
+            if (button.DataContext is ProcessItem item)
+            {
+                var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                picker.FileTypeFilter.Add("*");
+
+                // WinUI3 必须指定窗口
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.m_window);
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+                var file = await picker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    item.ProcessPath = file.Path;
+                }
+            }
+        }
+
+        private void DeleteProcessItem_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+
+            if (button.DataContext is ProcessItem item)
+            {
+                // 从集合中删除该项
+                _configManager.CurrentConfig.ProcessItems.Remove(item);
+
+                // 重新编号（如果你希望 index 连续）
+                _configManager.RefreshProcessListIndex(_configManager.CurrentConfig);
+            }
+        }
+
+        private void TargetProgramSelectButtonClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
+
+    
+
 }

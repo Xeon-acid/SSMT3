@@ -14,16 +14,20 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-
     CacheMode="BitmapCache"
-    Background="Transparent"
-    >
-    
+    Background="Transparent">
+
+    <Page.Resources>
+        <local:ProcessPathToVisibilityConverter x:Key="PathToVisibility"/>
+        <local:PathToInverseVisibility x:Key="PathToInverseVisibility"/>
+        <local:ArgumentsPlaceholderConverter x:Key="ArgsPlaceholder"/>
+    </Page.Resources>
+
     <!--WinUI3所有的东西都在CommunityToolkit里，
     然后也没有一个可靠的文档来告诉萌新在哪里可以获取，
     只有几个很久都不更新的Gallary程序勉强能参考-->
 
-    <Grid >
+    <Grid>
         <!-- 定义行 -->
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -36,7 +40,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- 背景视频 -->
-        <MediaPlayerElement 
+        <MediaPlayerElement
             x:Name="BackgroundVideo"
             Grid.ColumnSpan="2"
             Grid.RowSpan="2"
@@ -44,22 +48,22 @@
             AutoPlay="False"
             IsHitTestVisible="False"
             Stretch="UniformToFill"
-            Visibility="Collapsed" />
+            Visibility="Collapsed"/>
 
         <!-- 背景图片 -->
-        <Image 
+        <Image
             HorizontalAlignment="Right"
             RenderTransformOrigin="0.5,0.5"
             Grid.ColumnSpan="2"
             Grid.RowSpan="2"
-            x:Name="MainWindowImageBrush"  
-            Stretch="UniformToFill" >
+            x:Name="MainWindowImageBrush"
+            Stretch="UniformToFill">
             <Image.RenderTransform>
-                <ScaleTransform />
+                <ScaleTransform/>
             </Image.RenderTransform>
         </Image>
 
-      
+
 
 
 
@@ -74,10 +78,14 @@
             MaxWidth="1000"
             SelectionChanged="GameIconGridView_SelectionChanged">
 
-            <GridView.ItemTemplate >
-                <DataTemplate x:Name="GameIconItemGridTemplate" x:DataType="local:GameIconItem" >
-                    <GridViewItem >
-                        <Grid x:Name="ModShowGrid" Width="80" Height="80" AllowDrop="False" >
+            <GridView.ItemTemplate>
+                <DataTemplate x:Name="GameIconItemGridTemplate"
+                              x:DataType="local:GameIconItem">
+                    <GridViewItem>
+                        <Grid x:Name="ModShowGrid"
+                              Width="80"
+                              Height="80"
+                              AllowDrop="False">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -88,34 +96,53 @@
                             </Grid.ColumnDefinitions>
 
 
-                            <Image HorizontalAlignment="Left"   Grid.Row="0" Source="{x:Bind GameIconImage}" Stretch="UniformToFill" Width="80" Height="80"/>
+                            <Image HorizontalAlignment="Left"
+                                   Grid.Row="0"
+                                   Source="{x:Bind GameIconImage}"
+                                   Stretch="UniformToFill"
+                                   Width="80"
+                                   Height="80"/>
 
-                            <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Bottom" Height="20" >
+                            <StackPanel Grid.Row="0"
+                                        Orientation="Vertical"
+                                        VerticalAlignment="Bottom"
+                                        Height="20">
                                 <StackPanel.Background>
                                     <AcrylicBrush
                                         TintColor="{ThemeResource SystemChromeLowColor}"
                                         TintOpacity="0.7"
                                         FallbackColor="{ThemeResource SystemChromeLowColor}"/>
                                 </StackPanel.Background>
-                                <TextBlock 
-                                    HorizontalAlignment="Center" Margin="1" VerticalAlignment="Bottom" Text="{x:Bind GameName}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Margin="1"
+                                    VerticalAlignment="Bottom"
+                                    Text="{x:Bind GameName}"
+                                    FontSize="11"
+                                    FontWeight="Bold"/>
                             </StackPanel>
                             <!-- 流光边框 -->
-                            <Rectangle 
-                                Grid.Row="0" 
-                                Grid.RowSpan="2" 
-                                x:Name="FlowBorder" 
-                                RadiusX="8" 
-                                RadiusY="8" 
-                                StrokeThickness="2" 
+                            <Rectangle
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                x:Name="FlowBorder"
+                                RadiusX="8"
+                                RadiusY="8"
+                                StrokeThickness="2"
                                 Margin="-1">
                                 <!-- 扩大边界以覆盖内容 -->
                                 <Rectangle.Stroke>
-                                    <LinearGradientBrush x:Name="FlowBrush" StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="Transparent" Offset="0"/>
-                                        <GradientStop Color="Pink" Offset="0.45"/>
-                                        <GradientStop Color="DodgerBlue" Offset="0.75"/>
-                                        <GradientStop Color="Transparent" Offset="1"/>
+                                    <LinearGradientBrush x:Name="FlowBrush"
+                                                         StartPoint="0,0"
+                                                         EndPoint="1,1">
+                                        <GradientStop Color="Transparent"
+                                                      Offset="0"/>
+                                        <GradientStop Color="Pink"
+                                                      Offset="0.45"/>
+                                        <GradientStop Color="DodgerBlue"
+                                                      Offset="0.75"/>
+                                        <GradientStop Color="Transparent"
+                                                      Offset="1"/>
                                     </LinearGradientBrush>
                                 </Rectangle.Stroke>
                             </Rectangle>
@@ -126,8 +153,10 @@
             </GridView.ItemTemplate>
 
             <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
-                    <Setter Property="Margin" Value="5,5, 5, 5"/>
+                <Style TargetType="GridViewItem"
+                       BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                    <Setter Property="Margin"
+                            Value="5,5, 5, 5"/>
                 </Style>
             </GridView.ItemContainerStyle>
             <!-- An extra property also needs to be added to the GridView's ItemsWrapGrid.
@@ -135,8 +164,8 @@ The following sets the maximum # of items to show before wrapping.-->
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid x:Name="MaxItemsWrapGrid"
-                       MaximumRowsOrColumns="6"
-                       Orientation="Horizontal"/>
+                                   MaximumRowsOrColumns="6"
+                                   Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>
@@ -146,10 +175,9 @@ The following sets the maximum # of items to show before wrapping.-->
             Grid.ColumnSpan="2"
             VerticalAlignment="Top"
             HorizontalAlignment="Center"
-            Margin="50"
-            >
+            Margin="50">
             <interactivity:Interaction.Behaviors>
-                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue" />
+                <behaviors:StackedNotificationsBehavior x:Name="NotificationQueue"/>
             </interactivity:Interaction.Behaviors>
         </InfoBar>
 
@@ -159,33 +187,34 @@ The following sets the maximum # of items to show before wrapping.-->
             Visibility="Collapsed"
             CornerRadius="10"
             x:Name="Border_GameConfig"
-            Grid.Column="0" 
-            Grid.Row="1"  
+            Grid.Column="0"
+            Grid.Row="1"
             Grid.RowSpan="2"
-            Margin="40" >
-            
+            Margin="40">
+
             <Border.Background>
                 <AcrylicBrush
                     TintColor="{ThemeResource SystemChromeLowColor}"
                     TintOpacity="0.7"
                     FallbackColor="{ThemeResource SystemChromeLowColor}"/>
             </Border.Background>
-            
+
             <!-- 支持滑条，不然显示不完全 -->
-            <ScrollViewer 
+            <ScrollViewer
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 Margin="10"
                 VerticalScrollBarVisibility="Auto">
-                
-                <StackPanel   
-                    Orientation="Vertical" 
+
+                <StackPanel
+                    Orientation="Vertical"
                     HorizontalAlignment="Stretch">
 
                     <controls:SettingsCard x:Name="SettingsCard_GameName">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe7fc;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xe7fc;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <StackPanel Orientation="Vertical">
@@ -198,18 +227,16 @@ The following sets the maximum # of items to show before wrapping.-->
                             </ComboBox>
 
                             <StackPanel Orientation="Horizontal">
-                                <Button 
+                                <Button
                                     Margin="5"
                                     x:Name="Button_CreateNewGame"
-                                    Click="Button_CreateNewGame_Click"
-                                    >
+                                    Click="Button_CreateNewGame_Click">
                                 </Button>
 
-                                <Button 
+                                <Button
                                     Margin="5"
                                     x:Name="Button_DeleteSelectedGame"
-                                    Click="Button_DeleteSelectedGame_Click"
-                                    >
+                                    Click="Button_DeleteSelectedGame_Click">
                                 </Button>
                             </StackPanel>
                         </StackPanel>
@@ -220,10 +247,11 @@ The following sets the maximum # of items to show before wrapping.-->
                     <controls:SettingsCard x:Name="SettingsCard_LogicName">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xEb44;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xEb44;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
-                        <ComboBox 
+                        <ComboBox
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             x:Name="ComboBox_LogicName"
@@ -236,47 +264,47 @@ The following sets the maximum # of items to show before wrapping.-->
                     <controls:SettingsCard  x:Name="SettingsCard_GameTypeFolder">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xf003;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xf003;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <ComboBox
                             SelectionChanged="ComboBox_GameTypeFolder_SelectionChanged"
                             HorizontalAlignment="Stretch"
                             Margin="5"
-                            x:Name="ComboBox_GameTypeFolder"
-                            >
+                            x:Name="ComboBox_GameTypeFolder">
 
                         </ComboBox>
 
 
                     </controls:SettingsCard>
 
-                   
-                   
+
+
                     <Expander
                         HorizontalContentAlignment="Stretch"
                         HorizontalAlignment="Stretch"
                         IsExpanded="True">
                         <Expander.Header>
                             <StackPanel Margin="10">
-                                <TextBlock 
+                                <TextBlock
                                     x:Name="TextBlock_3DmigotoFolderPath"
-                                    FontSize="14" 
+                                    FontSize="14"
                                     FontWeight="Bold"/>
                             </StackPanel>
                         </Expander.Header>
 
                         <StackPanel Orientation="Vertical">
-                            <TextBox 
+                            <TextBox
                                 HorizontalAlignment="Stretch"
                                 Margin="5"
                                 LostFocus="TextBox_3DmigotoPath_LostFocus"
-                                x:Name="TextBox_3DmigotoPath"  />
+                                x:Name="TextBox_3DmigotoPath"/>
 
                             <StackPanel Orientation="Horizontal">
-                                <Button 
+                                <Button
                                     Margin="5"
-                                    VerticalAlignment="Center" 
+                                    VerticalAlignment="Center"
                                     Click="Button_Choose3DmigotoPath_Click"
                                     x:Name="Button_Choose3DmigotoPath"/>
                                 <Button
@@ -287,54 +315,52 @@ The following sets the maximum # of items to show before wrapping.-->
                                 <HyperlinkButton
                                     Margin="5"
                                     x:Name="HyperlinkButton_MigotoPackageVersion"
-                                    Content="3Dmigoto Package Version: "
-                                    />
+                                    Content="3Dmigoto Package Version: "/>
                             </StackPanel>
-                            
-                            
+
+
                             <StackPanel Orientation="Horizontal">
-                                <Button 
+                                <Button
                                     Margin="5"
                                     Style="{StaticResource AccentButtonStyle}"
                                     x:Name="Button_CheckMigotoPackageUpdate"
-                                    Click="Button_CheckMigotoPackageUpdate_Click"
-                                    >
+                                    Click="Button_CheckMigotoPackageUpdate_Click">
                                 </Button>
 
-                                <ProgressRing 
+                                <ProgressRing
                                     Margin="5"
-                                    x:Name="ProgressRing_PackageUpdateRing" 
+                                    x:Name="ProgressRing_PackageUpdateRing"
                                     IsActive="False">
                                 </ProgressRing>
 
                             </StackPanel>
 
-                            <TextBox 
+                            <TextBox
                                 HorizontalAlignment="Stretch"
                                 Margin="5"
                                 LostFocus="TextBox_TargetPath_LostFocus"
                                 x:Name="TextBox_TargetPath"/>
 
-                            <Button 
+                            <Button
                                 Margin="5"
                                 Click="Button_ChooseProcessFile_Click"
                                 x:Name="Button_ChooseProcessFile"
                                 VerticalAlignment="Center"/>
 
 
-                            <TextBox 
+                            <TextBox
                                 Margin="5"
                                 HorizontalAlignment="Stretch"
                                 LostFocus="TextBox_LaunchPath_LostFocus"
                                 x:Name="TextBox_LaunchPath"/>
 
-                            <Button 
+                            <Button
                                 Margin="5"
                                 Click="Button_ChooseLaunchFile_Click"
                                 x:Name="Button_ChooseLaunchFile"
                                 VerticalAlignment="Center"/>
 
-                            <TextBox 
+                            <TextBox
                                 Margin="5"
                                 LostFocus="TextBox_LaunchArgsPath_LostFocus"
                                 MinWidth="200"
@@ -343,126 +369,127 @@ The following sets the maximum # of items to show before wrapping.-->
 
 
 
-                           
+
 
                         </StackPanel>
 
                     </Expander>
-                    
-                        <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xf19d;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
 
-                            
-
-                            <ComboBox x:Name="ComboBox_ShowWarning" SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
-                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
-                            </ComboBox>
+                    <controls:SettingsCard x:Name="SettingsCard_ShowWarnings">
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xf19d;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
 
 
-                        </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe71b;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-                                
-
-                            <ComboBox 
-                                SelectionChanged="ComboBox_Symlink_SelectionChanged"
-                                x:Name="ComboBox_Symlink">
-                                <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
-                            </ComboBox>
+                        <ComboBox x:Name="ComboBox_ShowWarning"
+                                  SelectionChanged="ComboBox_ShowWarning_SelectionChanged">
+                            <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_On"></ComboBoxItem>
+                            <ComboBoxItem x:Name="ComboBoxItem_ShowWarning_Off"></ComboBoxItem>
+                        </ComboBox>
 
 
-                        </controls:SettingsCard>
+                    </controls:SettingsCard>
 
-                        <controls:SettingsCard 
-                            x:Name="SettingsCard_DllReplace"
-                            Description=""
-                            Header="">
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xEfa5;" FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
-
-                            <ComboBox 
-                                SelectionChanged="ComboBox_DllReplace_SelectionChanged"
-                                x:Name="ComboBox_DllReplace" 
-                                >
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev" />
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play" />
-                                <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None" />
-                            </ComboBox>
+                    <controls:SettingsCard x:Name="SettingsCard_SymlinkFeature">
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xe71b;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
 
 
-                        </controls:SettingsCard>
+
+                        <ComboBox
+                            SelectionChanged="ComboBox_Symlink_SelectionChanged"
+                            x:Name="ComboBox_Symlink">
+                            <ComboBoxItem x:Name="ComboBox_Symlink_On"></ComboBoxItem>
+                            <ComboBoxItem x:Name="ComboBox_Symlink_Off"></ComboBoxItem>
+                        </ComboBox>
 
 
-                        <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
+                    </controls:SettingsCard>
 
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE745;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
+                    <controls:SettingsCard
+                        x:Name="SettingsCard_DllReplace"
+                        Description=""
+                        Header="">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEfa5;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
 
-                            <ComboBox 
-                                SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
-                                    
-                                x:Name="ComboBox_DllPreProcess">
-                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_None" />
-                                <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX" />
-                            </ComboBox>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe964;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
+                        <ComboBox
+                            SelectionChanged="ComboBox_DllReplace_SelectionChanged"
+                            x:Name="ComboBox_DllReplace">
+                            <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Dev"/>
+                            <ComboBoxItem x:Name="ComboBoxItem_DllReplace_Play"/>
+                            <ComboBoxItem x:Name="ComboBoxItem_DllReplace_None"/>
+                        </ComboBox>
 
 
-                            <NumberBox 
-                                Margin="5"
-                                SmallChange="10"
-                                LargeChange="100"
-                                x:Name="NumberBox_DllInitializationDelay"
-                                LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
-                            <!-- 这里换成你查到的编码 -->
-                            <controls:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xe736;"     
-                                    FontFamily="Segoe Fluent Icons"/>
-                            </controls:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard>
 
 
-                            <ComboBox 
-                                SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
-                                x:Name="ComboBox_AutoSetAnalyseOptions">
-                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
-                                <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
-                            </ComboBox>
+                    <controls:SettingsCard x:Name="SettingsCard_DllPreProcess">
+
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE745;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <ComboBox
+                            SelectionChanged="ComboBox_DllPreProcess_SelectionChanged"
+                            x:Name="ComboBox_DllPreProcess">
+                            <ComboBoxItem x:Name="ComboBox_DllPreProcess_None"/>
+                            <ComboBoxItem x:Name="ComboBox_DllPreProcess_PackWithUPX"/>
+                        </ComboBox>
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard x:Name="SettingsCard_DllInitializationDelay">
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xe964;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
 
 
-                        </controls:SettingsCard>
+                        <NumberBox
+                            Margin="5"
+                            SmallChange="10"
+                            LargeChange="100"
+                            x:Name="NumberBox_DllInitializationDelay"
+                            LostFocus="NumberBox_DllInitializationDelay_LostFocus"/>
+
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard x:Name="SettingsCard_AutoSetAnalyseOptions">
+                        <!-- 这里换成你查到的编码 -->
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xe736;"
+                                      FontFamily="Segoe Fluent Icons"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+
+                        <ComboBox
+                            SelectionChanged="ComboBox_AutoSetAnalyseOptions_SelectionChanged"
+                            x:Name="ComboBox_AutoSetAnalyseOptions">
+                            <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_AutoSet"></ComboBoxItem>
+                            <ComboBoxItem x:Name="ComboboxItem_AutoSetAnalyseOptions_DontSet"></ComboBoxItem>
+                        </ComboBox>
+
+
+                    </controls:SettingsCard>
 
                     <controls:SettingsCard x:Name="SettingsCard_ClearGICache">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xed62;"  FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xed62;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <Button
@@ -475,8 +502,8 @@ The following sets the maximum # of items to show before wrapping.-->
                     <controls:SettingsCard x:Name="SettingsCard_RunIgnoreGIError40">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xea0d;"     
-                FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xea0d;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
 
@@ -484,46 +511,45 @@ The following sets the maximum # of items to show before wrapping.-->
                         <Button
                             Click="Button_RunIgnoreGIError40_Click"
                             x:Name="Button_RunIgnoreGIError40"
-                            Margin="5"
-                            ></Button>
+                            Margin="5"></Button>
 
                     </controls:SettingsCard>
 
                     <controls:SettingsCard  x:Name="SettingsCard_AutoUpdateBackground">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe8ba;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xe8ba;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <StackPanel Orientation="Horizontal">
                             <Button
                                 Click="Button_CheckBGUpdate_Click_Static"
-                                Style="{StaticResource ButtonRevealStyle}"
+                                Style="{StaticResource AccentButtonStyle}"
                                 Margin="5"
-                                x:Name="Button_AutoUpdateBackgroundOnlyStatic"
-                                />
+                                x:Name="Button_AutoUpdateBackgroundOnlyStatic"/>
                             <Button
                                 Click="Button_CheckBGUpdate_Click"
                                 Style="{StaticResource AccentButtonStyle}"
                                 Margin="5"
-                                x:Name="Button_AutoUpdateBackground"
-                                />
+                                x:Name="Button_AutoUpdateBackground"/>
 
-                            <ProgressRing 
+                            <ProgressRing
                                 Visibility="Collapsed"
                                 x:Name="ProgressRing_AutoUpdateBackground"
                                 IsActive="True"></ProgressRing>
-                            
+
                         </StackPanel>
 
-                        
+
 
                     </controls:SettingsCard>
 
                     <controls:SettingsCard  x:Name="SettingsCard_SelectBackgroundPicture">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xe8b9;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xe8b9;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
 
@@ -537,14 +563,14 @@ The following sets the maximum # of items to show before wrapping.-->
                     <controls:SettingsCard  x:Name="SettingsCard_ShowIcon">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xeca5;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xeca5;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <ToggleSwitch
                             Toggled="ToggleSwitch_ShowIcon_Toggled"
                             Margin="5"
-                            x:Name="ToggleSwitch_ShowIcon"
-                            >
+                            x:Name="ToggleSwitch_ShowIcon">
                         </ToggleSwitch>
 
 
@@ -553,22 +579,201 @@ The following sets the maximum # of items to show before wrapping.-->
                     <controls:SettingsCard  x:Name="SettingsCard_SelectIconFile">
                         <!-- 这里换成你查到的编码 -->
                         <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xecaa;" FontFamily="Segoe Fluent Icons"/>
+                            <FontIcon Glyph="&#xecaa;"
+                                      FontFamily="Segoe Fluent Icons"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <Button
                             Click="Button_ChooseGameIcon_Click"
                             Margin="5"
-                            x:Name="Button_ChooseGameIcon"
-                            />
+                            x:Name="Button_ChooseGameIcon"/>
 
                     </controls:SettingsCard>
 
-                    
+
 
                 </StackPanel>
             </ScrollViewer>
         </Border>
+
+        <!-- 配置面板 -->
+        <Border x:Name="Border_ProcessConfig"
+                CornerRadius="10"
+                Grid.Column="0"
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Margin="40"
+                Visibility="Collapsed">
+
+            <Border.Background>
+                <AcrylicBrush TintColor="{ThemeResource SystemChromeLowColor}"
+                      TintOpacity="0.7"
+                      FallbackColor="{ThemeResource SystemChromeLowColor}"/>
+            </Border.Background>
+
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- 配置选择区域 -->
+                <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,20">
+                    <Grid ColumnDefinitions="*,Auto" Width="260">
+                        <!-- 可输入文本框 -->
+                        <TextBox x:Name="ConfigInputBox"
+                                 Text="{Binding SelectedConfigName, Mode=TwoWay}"
+                                 PlaceholderText="输入配置名称..."
+                                 Margin="0,0,5,0"/>
+
+                        <!-- 下拉选择配置 -->
+                        <ComboBox x:Name="ConfigComboBox"
+                                  ItemsSource="{x:Bind ConfigList}"
+                                  DisplayMemberPath="Name"
+                                  SelectedItem="{x:Bind SelectedConfig, Mode=TwoWay}"
+                                  Width="40"
+                                  HorizontalAlignment="Right">
+                        </ComboBox>
+                    </Grid>
+                    <Button Content="新建配置"
+                    Click="AddNewConfig_Click"
+                    Margin="0,0,5,0"/>
+                    <Button Content="删除配置"
+                    Click="DeleteConfig_Click"
+                            
+                    Margin="0,0,5,0"/>
+                    <Button Content="保存"
+                    Click="SaveConfig_Click"
+                    Margin="0,0,5,0"/>
+                    <Button Content="关闭"
+                    Click="CloseConfigPanel_Click"/>
+                </StackPanel>
+                <Button x:Name="AddProcessButton"
+                        Content="添加进程"
+                        Click="AddProcessItem_Click"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,-52,10,10" 
+                        Grid.Row="1"
+                        Visibility="Visible"/>
+
+                <!-- 第一行：表头 -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="55"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                       Text="进程路径"
+                       HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="1"
+                       Text="启动配置"
+                       HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="2"
+                       Text="启动延迟"
+                       HorizontalAlignment="Center"/>
+                </Grid>
+
+                <!-- 第二行：数据列表 -->
+                <ScrollViewer Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      Name="ProcessListScrollViewer">
+                    <ItemsControl x:Name="ProcessItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:ProcessItem">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <!-- 删除按钮 -->
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 路径 + 选择文件按钮 -->
+                                    <Grid Grid.Column="0" Margin="5,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding ProcessPath, Mode=TwoWay}"
+                                                 PlaceholderText="进程路径"
+                                                 Margin="0,0,0,0"/>
+
+                                        <Button Grid.Column="1"
+                                                Width="48"
+                                                Height="32"
+                                                Click="SelectProcessFile_Click"
+                                                Visibility="{Binding ProcessPath, Converter={StaticResource PathToVisibility}}"
+                                                >
+                                            <Viewbox Stretch="Uniform" Width="15" Height="15">
+                                                <SymbolIcon Symbol="OpenFile"/>
+                                            </Viewbox>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- 参数 -->
+                                    <Grid Grid.Column="1" Margin="5,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding Arguments, Mode=TwoWay}"
+                                                 Margin="0,0,0,0"
+                                                 PlaceholderText="{Binding ProcessPath, Converter={StaticResource ArgsPlaceholder}}"/>
+                                        <Button Grid.Column="1"
+                                                Width="48"
+                                                Height="32"
+                                                Click="TargetProgramSelectButtonClicked"
+                                                Visibility="{Binding ProcessPath, Converter={StaticResource PathToInverseVisibility}}">
+                                            <Viewbox Stretch="Uniform" Width="15" Height="15">
+                                                <SymbolIcon Symbol="OpenFile"/>
+                                            </Viewbox>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- 延迟 -->
+                                    <TextBox Grid.Column="2"
+                                             Text="{Binding Delay, Mode=TwoWay}"
+                                             Width="80"
+                                             Margin="0,0"
+                                             PlaceholderText="延迟(ms)"/>
+
+                                    <!-- 删除按钮 -->
+                                    <Button Grid.Column="3"
+                                            Background="Red"
+                                            Foreground="White"
+                                            Width="40"
+                                            Height="32"
+                                            Margin="5,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="DeleteProcessItem_Click">
+                                        <Viewbox Stretch="Uniform" Width="15" Height="15">
+                                            <SymbolIcon Symbol="Delete"/>
+                                        </Viewbox>
+
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+
 
 
         <!--一键启动按钮和设置按钮-->
@@ -577,18 +782,18 @@ The following sets the maximum # of items to show before wrapping.-->
             Grid.ColumnSpan="2"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="0,0,25,25" 
+            Margin="0,0,25,25"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
 
             <!--一键启动按钮-->
-            <StackPanel 
+            <StackPanel
                 Margin="15"
                 Orientation="Vertical">
 
                 <StackPanel Orientation="Horizontal">
-                    <Border
+                    <!--<Border
                         CornerRadius="25"
                         Width="Auto"
                         Margin="5"
@@ -605,48 +810,67 @@ The following sets the maximum # of items to show before wrapping.-->
                             Click="Button_RunLaunchPath_Without3DM_Click"
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"/>
-                    </Border>
-
+                    </Border>-->
                     <Border
                         CornerRadius="25"
                         Width="Auto"
                         Margin="5"
                         BorderThickness="2"
-                        BorderBrush="White"
-                        >
-                        <Button 
-                            BorderThickness="0"
-                            x:Name="Button_RunLaunchPath" 
-                            Width="200"
-                            MinHeight="50"
-                            FontSize="21"
-                            FontWeight="Bold"
-                            Click="Button_RunLaunchPath_Click"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"/>
+                        BorderBrush="White">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 主要按钮部分 -->
+                            <Button
+                                Grid.Column="0"
+                                BorderThickness="0"
+                                x:Name="Button_RunLaunchPath"
+                                MinHeight="50"
+                                FontSize="21"
+                                FontWeight="Bold"
+                                Click="StartGameButton_Click"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="执行配置"/>
+
+                            <!-- 下拉箭头按钮 -->
+                            <Button
+                                Grid.Column="1"
+                                x:Name="Button_DropDown"
+                                BorderThickness="0"
+                                MinWidth="30"
+                                MinHeight="50"
+                                Click="Button_DropDown_Click"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                                <SymbolIcon Symbol="More"/>
+                            </Button>
+                        </Grid>
                     </Border>
 
-                    <Button 
+                    <Button
                         VerticalAlignment="Center"
-                            Margin="5"
-                            x:Name="Button_ShowSetting"
-                            Click="Button_ShowSetting_Click"
-                            CornerRadius="25"
-                            Width="50" 
-                            Height="50">
+                        Margin="5"
+                        x:Name="Button_ShowSetting"
+                        Click="Button_ShowSetting_Click"
+                        CornerRadius="25"
+                        Width="50"
+                        Height="50">
                         <SymbolIcon Symbol="Setting"/>
                     </Button>
-
                 </StackPanel>
-                
 
             </StackPanel>
 
 
 
         </StackPanel>
-        
-       
+
+
     </Grid>
-        
+
 </Page>
