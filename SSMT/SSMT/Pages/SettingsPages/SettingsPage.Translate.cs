@@ -43,7 +43,7 @@ namespace SSMT
                 HyperlinkButton_SSMTDocuments.Content = "SSMT使用文档";
                 HyperlinkButton_SSMTPluginTheHerta.Content = "SSMT的Blender插件TheHerta";
                 HyperlinkButton_SSMTDiscord.Content = "SSMT Discord交流群";
-                HyperlinkButton_SSMTQQGroup.Content = "SSMT QQ公开群 169930474";
+                HyperlinkButton_SSMTQQGroup.Content = "SSMT QQ公开群 794243126";
 
                 Run_SponsorSupport.Text = "赞助支持";
                 HyperlinkButton_SSMTTechCommunity.Content = "SSMT技术社群";
@@ -127,7 +127,7 @@ namespace SSMT
                 HyperlinkButton_SSMTDocuments.Content = "SSMT Documents";
                 HyperlinkButton_SSMTPluginTheHerta.Content = "SSMT's Blender Plugin: TheHerta";
                 HyperlinkButton_SSMTDiscord.Content = "SSMT Discord Server";
-                HyperlinkButton_SSMTQQGroup.Content = "SSMT QQGroup 169930474";
+                HyperlinkButton_SSMTQQGroup.Content = "SSMT QQGroup 794243126";
 
                 Run_SponsorSupport.Text = "Sponsor Support";
                 HyperlinkButton_SSMTTechCommunity.Content = "SSMT Tech Community";

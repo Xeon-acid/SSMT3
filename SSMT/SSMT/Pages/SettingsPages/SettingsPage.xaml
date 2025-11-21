@@ -278,7 +278,7 @@
 
                 <HyperlinkButton 
                     x:Name="HyperlinkButton_SSMTQQGroup"
-                    NavigateUri="https://qm.qq.com/q/duAXbbdHOg" ></HyperlinkButton>
+                    NavigateUri="https://qm.qq.com/q/bZUlfKyQaQ" ></HyperlinkButton>
 
                 <MenuFlyoutSeparator></MenuFlyoutSeparator>
 
