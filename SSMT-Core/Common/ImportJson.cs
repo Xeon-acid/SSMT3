@@ -80,7 +80,7 @@ namespace SSMT
             jObject["GPU-PreSkinning"] = d3D11GameType.GPUPreSkinning;
 
             //空的，要配合自动贴图识别算法来填充，所以暂时不用管
-            jObject["PartNameTextureResourceReplaceList"] = JToken.FromObject(new Dictionary<string, string>());
+            jObject["ComponentTextureMarkUpInfoListDict"] = JToken.FromObject(new Dictionary<string, string>());
 
             //
             List<JObject> elementObjectList = new List<JObject>();
@@ -156,7 +156,7 @@ namespace SSMT
             jObject["GPU-PreSkinning"] = d3D11GameType.GPUPreSkinning;
 
             //空的，要配合自动贴图识别算法来填充，所以暂时不用管
-            jObject["PartNameTextureResourceReplaceList"] = JToken.FromObject(new Dictionary<string, string>());
+            jObject["ComponentTextureMarkUpInfoListDict"] = JToken.FromObject(new Dictionary<string, string>());
 
             //
             List<JObject> elementObjectList = new List<JObject>();
@@ -274,7 +274,7 @@ namespace SSMT
             jObject["GPU-PreSkinning"] = d3D11GameType.GPUPreSkinning;
 
             //空的，要配合自动贴图识别算法来填充，所以暂时不用管
-            jObject["PartNameTextureResourceReplaceList"] = JToken.FromObject(new Dictionary<string, string>());
+            jObject["ComponentTextureMarkUpInfoListDict"] = JToken.FromObject(new Dictionary<string, string>());
 
             //
             List<JObject> elementObjectList = new List<JObject>();
@@ -392,7 +392,7 @@ namespace SSMT
             jObject["GPU-PreSkinning"] = d3D11GameType.GPUPreSkinning;
 
             //空的，要配合自动贴图识别算法来填充，所以暂时不用管
-            jObject["PartNameTextureResourceReplaceList"] = JToken.FromObject(new Dictionary<string, string>());
+            jObject["ComponentTextureMarkUpInfoListDict"] = JToken.FromObject(new Dictionary<string, string>());
 
             //
             List<JObject> elementObjectList = new List<JObject>();

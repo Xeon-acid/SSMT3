@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using SSMT_Core;
+using SSMT_Core.InfoItemClass;
 
 namespace SSMT
 {
@@ -422,8 +423,8 @@ namespace SSMT
                 {
                     LOG.Info("开始修改");
                     JObject jObject = DBMTJsonUtils.ReadJObjectFromFile(TmpJsonPath);
-                    jObject["PartNameTextureResourceReplaceList"] = JObject.FromObject(new Dictionary<string, string>());
-                    LOG.Info(jObject["PartNameTextureResourceReplaceList"].ToString());
+                    jObject["ComponentTextureMarkUpInfoListDict"] = JObject.FromObject(new Dictionary<string, string>());
+                    LOG.Info(jObject["ComponentTextureMarkUpInfoListDict"].ToString());
                     DBMTJsonUtils.SaveJObjectToFile(jObject, TmpJsonPath);
                 }
             }
@@ -443,7 +444,7 @@ namespace SSMT
 
             Dictionary<string, TextureDeduped> dictionary = TextureConfig.Read_TrianglelistDedupedFileNameDict_FromJson(DrawIB);
 
-            List<string> TextureResourceReplaceList = [];
+            List<TextureMarkUpInfo> TextureMarkUpInfoList = new List<TextureMarkUpInfo>();
             foreach (ImageItem imageItem in imageCollection)
             {
 
@@ -462,10 +463,18 @@ namespace SSMT
                 string ImageSourcePath = CurrentDrawIBOutputFolder + "DedupedTextures\\" + FALogDedupedFileName;
                 string TextureHash = DBMTStringUtils.GetFileHashFromFileName(imageItem.FileName);
 
-                string TargetImageFileName = DrawIB + "_" +  PartName  + "_" + TextureHash + "_" + imageItem.MarkStyle + "_" + imageItem.MarkName  + suffix;
+                //string TargetImageFileName = DrawIB + "_" +  PartName  + "_" + TextureHash + "_" + imageItem.MarkStyle + "_" + imageItem.MarkName  + suffix;
+                //新的贴图标记不需要那么麻烦，直接DrawIB-PartName-MarkName就行，我们把关键信息都写到tmp.json中
+                string TargetImageFileName = DrawIB + "-" +  PartName  + "-"  + imageItem.MarkName  + suffix;
 
                 //拼接ResourceReplace
-                TextureResourceReplaceList.Add(imageItem.PixelSlot + " = " + TargetImageFileName);
+                TextureMarkUpInfoList.Add(new TextureMarkUpInfo { 
+                    MarkName = imageItem.MarkName,
+                    MarkHash = TextureHash,
+                    MarkSlot = imageItem.PixelSlot,
+                    MarkType = imageItem.MarkStyle == "Hash" ? 0 : 1,
+                    MarkFileName = TargetImageFileName
+                });
 
                 //复制贴图过去
                 foreach (string TargetFolderPath in TypeFolderPathList)
@@ -479,23 +488,31 @@ namespace SSMT
                 }
             }
 
+            JArray TextureMarkUpInfoJArray = new JArray();
+            foreach (TextureMarkUpInfo textureMarkUpInfo in TextureMarkUpInfoList)
+            {
+                TextureMarkUpInfoJArray.Add(textureMarkUpInfo.GetJObject());
+            }
+
             
             foreach (string TargetFolderPath in TypeFolderPathList)
             {
                 //修改tmp.json
                 string TmpJsonPath = Path.Combine(TargetFolderPath, "tmp.json");
                 JObject jObject = DBMTJsonUtils.ReadJObjectFromFile(TmpJsonPath);
-                JObject PartNameTextureResourceReplaceListObj = (JObject)jObject["PartNameTextureResourceReplaceList"];
+                JObject PartNameTextureResourceReplaceListObj = (JObject)jObject["ComponentTextureMarkUpInfoListDict"];
+
                 if (ModifyToTmpJson)
                 {
-                    PartNameTextureResourceReplaceListObj[PartName] = new JArray(TextureResourceReplaceList);
+                    PartNameTextureResourceReplaceListObj[PartName] = TextureMarkUpInfoJArray;
                 }
                 else
                 {
                     PartNameTextureResourceReplaceListObj.Remove(PartName);
                 }
                     
-                jObject["PartNameTextureResourceReplaceList"] = PartNameTextureResourceReplaceListObj;
+                //jObject["PartNameTextureResourceReplaceList"] = PartNameTextureResourceReplaceListObj;
+                jObject["ComponentTextureMarkUpInfoListDict"] = PartNameTextureResourceReplaceListObj;
                 DBMTJsonUtils.SaveJObjectToFile(jObject, TmpJsonPath);
             }
             
