@@ -472,7 +472,7 @@ namespace SSMT
                     MarkName = imageItem.MarkName,
                     MarkHash = TextureHash,
                     MarkSlot = imageItem.PixelSlot,
-                    MarkType = imageItem.MarkStyle == "Hash" ? 0 : 1,
+                    MarkType = imageItem.MarkStyle,
                     MarkFileName = TargetImageFileName
                 });
 

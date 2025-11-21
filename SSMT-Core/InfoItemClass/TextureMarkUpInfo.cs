@@ -21,15 +21,10 @@ namespace SSMT_Core.InfoItemClass
         public string MarkName { get; set; } = "";
 
         /// <summary>
-        /// 标记类型，分为槽位风格和Hash风格
-        /// 
-        /// 0 是 Hash风格
-        /// 1 是 槽位风格
-        /// 
-        /// 默认为0，默认为Hash风格
+        /// 标记类型，分为Slot风格和Hash风格
         /// </summary>
         [JsonProperty("MarkType")]
-        public int MarkType { get; set; } = 0;
+        public string MarkType { get; set; } = "";
 
         /// <summary>
         /// 贴图本身的Hash值
