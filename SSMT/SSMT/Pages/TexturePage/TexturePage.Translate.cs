@@ -36,17 +36,13 @@ namespace SSMT
 
                 //ComboBox_MarkName.Header = "标记名称";
                 Text_Block_MarkName.Text = "标记名称";
-                Button_MarkTexture.Content = "标记此贴图";
                 TextBox_DIYMarkName.Header = "自定义标记名称";
                 Button_DIYMarkTexture.Content = "标记此贴图为自定义名称";
                 Button_CancelMarkTexture.Content = "取消名称标记";
                 Button_MarkAutoTextureSlotStyle.Content = "标记为槽位风格";
                 Button_MarkAutoTextureHashStyle.Content = "标记为Hash风格";
 
-                Button_ApplyToAutoTexture.Content = "应用到自动贴图";
                 Button_CancelAutoTextureForCurrentDrawIB.Content = "取消当前绘制IB hash的自动贴图";
-                Button_ApplyToPreViewTexture.Content = "应用到预览贴图";
-                ToolTipService.SetToolTip(Button_ApplyToPreViewTexture, "此按钮和应用到自动贴图不同，应用后可以在Blender中一键导入时自动上贴图，但是无法参与生成Mod的全自动ini，适合仅预览的模型部分使用也就是只标记DiffuseMap用来上色");
 
                 
 
@@ -67,16 +63,13 @@ namespace SSMT
 
                 //ComboBox_MarkName.Header = "MarkName";
                 Text_Block_MarkName.Text = "MarkName";
-                Button_MarkTexture.Content = "Mark Texture";
                 TextBox_DIYMarkName.Header = "DIY MarkName";
                 Button_DIYMarkTexture.Content = "Mark Texture As DIY MarkName";
                 Button_CancelMarkTexture.Content = "Cancel Texture Mark";
                 Button_MarkAutoTextureSlotStyle.Content = "Mark As Slot Style";
                 Button_MarkAutoTextureHashStyle.Content = "Mark As Hash Style";
 
-                Button_ApplyToAutoTexture.Content = "Apply To Auto Texture";
                 Button_CancelAutoTextureForCurrentDrawIB.Content = "Cancel Auto Texture";
-                Button_ApplyToPreViewTexture.Content = "Apply To Preview Texture";
 
             }
         }
