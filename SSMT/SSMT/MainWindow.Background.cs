@@ -212,6 +212,15 @@ namespace SSMT
 
                         string mp4Output = Path.ChangeExtension(NewWebmBackgroundPath, ".mp4");
 
+                        //Nico: 这里有个测试得出的BUG，记录在此
+                        //必须先删除旧的背景图，然后再去转码。
+                        //否则直接调用转码如果目标mp4存在的情况下会转码失败。
+                        if (File.Exists(mp4Output))
+                        {
+                            File.Delete(mp4Output);
+                        }
+
+
                         var psi = new ProcessStartInfo
                         {
                             FileName = PathManager.Path_Plugin_FFMPEG,
