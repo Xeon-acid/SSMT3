@@ -196,7 +196,6 @@ namespace SSMT
 
 
 			//最后如果有d3dx.ini的话，如果有哪些路径配置还是空的，就试图从d3dx.ini中解析读取，保底机制
-			//target,launch,launch_args,show_warnings,symlink
 			string d3dxini_path = Path.Combine(TextBox_3DmigotoPath.Text, "d3dx.ini");
 			if (File.Exists(d3dxini_path))
 			{
@@ -205,23 +204,10 @@ namespace SSMT
 				{
 					TextBox_TargetPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "target");
 				}
-
-				if (TextBox_LaunchPath.Text.Trim() == "")
-				{
-					LOG.Info("切换游戏后，发现LaunchPath为空，重新读取");
-					TextBox_LaunchPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "launch");
-				}
-
-				if (TextBox_LaunchArgsPath.Text.Trim() == "")
-				{
-					TextBox_LaunchArgsPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "launch_args");
-				}
-
-
 			}
 
-
 			IsLoading = false;
+
             //游戏切换后要把Package标识以及版本号改一下
             UpdatePackageVersionLink();
 
