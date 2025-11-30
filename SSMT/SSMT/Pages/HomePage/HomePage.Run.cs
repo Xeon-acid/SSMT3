@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SSMT_Core;
 using SSMT_Core.InfoClass;
@@ -111,7 +111,7 @@ namespace SSMT
 
                     //这里咱们根本不填写launch和launch_args，因为咱们用的是shell启动，所以这里直接就是强制设为空，防止预料之外的行为干扰。
                     D3dxIniConfig.SaveAttributeToD3DXIni(PathManager.Path_D3DXINI, "[loader]", "launch", "");
-                    //D3dxIniConfig.SaveAttributeToD3DXIni(PathManager.Path_D3DXINI, "[loader]", "launch_args", gameConfig.LaunchArgs);
+                    D3dxIniConfig.SaveAttributeToD3DXIni(PathManager.Path_D3DXINI, "[loader]", "launch_args","");
 
                     int dllInitializationDelay = (int)NumberBox_DllInitializationDelay.Value;
 

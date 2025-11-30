@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using SSMT_Core;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SSMT.ViewModels
 {
@@ -114,7 +115,8 @@ namespace SSMT.ViewModels
         [RelayCommand]
         public async Task ChooseVideoFileAsync()
         {
-            string path = await SSMTCommandHelper.ChooseFileAndGetPath(".mp4,.avi,.mov,.mkv,.flv,.webm,.wmv,.gif");
+            var supportedFormats = new List<string> { ".mp4", ".avi", ".mov", ".mkv", ".flv", ".webm", ".wmv", ".gif" };
+            string path = await SSMTCommandHelper.ChooseFileAndGetPath(supportedFormats);
             if (!string.IsNullOrEmpty(path))
             {
                 SelectedVideoFilePath = path;
@@ -172,7 +174,7 @@ namespace SSMT.ViewModels
                 // 验证视频文件
                 if (string.IsNullOrWhiteSpace(SelectedVideoFilePath) || !File.Exists(SelectedVideoFilePath))
                 {
-                    await SSMTMessageHelper.Show("请先选择视频文件（.mp4）。", "Please choose the video file (.mp4) first.");
+                    await SSMTMessageHelper.Show("请先选择视频文件。", "Please choose the video file.");
                     return;
                 }
 
@@ -196,6 +198,14 @@ namespace SSMT.ViewModels
                     }
                 }
 
+                // 创建DynamicTextureMod文件夹
+                string dynamicTextureModDir = Path.Combine(DynamicTextureModGenerateFolderPath, "DynamicTextureMod");
+                if (Directory.Exists(dynamicTextureModDir))
+                {
+                    Directory.Delete(dynamicTextureModDir, true);
+                }
+                Directory.CreateDirectory(dynamicTextureModDir);
+
                 //1. 获取DDS属性
                 var (width, height, format) = GetDdsInfo(SelectedTextureFilePath);
 
@@ -206,11 +216,19 @@ namespace SSMT.ViewModels
                 ExtractAndFlipFrames(SelectedVideoFilePath, tempPngDir);
 
                 //3. PNG批量转DDS
-                string outputDir = DynamicTextureModGenerateFolderPath;
-                ConvertPngToDds(tempPngDir, outputDir, width, height, format);
+                ConvertPngToDds(tempPngDir, dynamicTextureModDir, width, height, format);
 
-                LOG.Info("GenerateDynamicTextureMod: done");
-                await SSMTMessageHelper.Show("动态贴图Mod生成完成。", "Dynamic texture mod generation completed.");
+                //统计DDS文件数量
+                int ddsFileCount = Directory.GetFiles(dynamicTextureModDir, "*.dds", SearchOption.TopDirectoryOnly).Length;
+                LOG.Info($"DynamicTextureMod directory contains {ddsFileCount} DDS files.");
+
+                string TextureHash = Path.GetFileName(SelectedTextureFilePath).Split("_")[0];
+
+                CoreFunctions.GenerateDynamicTextureMod(dynamicTextureModDir, TextureHash, ".dds");
+
+                SSMTCommandHelper.ShellOpenFolder(dynamicTextureModDir);
+                //LOG.Info("GenerateDynamicTextureMod: done");
+                //await SSMTMessageHelper.Show($"动态贴图Mod生成完成，共生成 {ddsFileCount} 个DDS文件。", $"Dynamic texture mod generation completed. {ddsFileCount} DDS files generated.");
             }
             catch (Exception ex)
             {
@@ -269,15 +287,25 @@ namespace SSMT.ViewModels
 
         private void ExtractAndFlipFrames(string videoPath, string outputDir)
         {
+            int fps = SelectedFpsOption == FpsOption.Fps30 ?30 :60;
             var psi = new ProcessStartInfo
             {
                 FileName = PathManager.Path_Plugin_FFMPEG,
-                Arguments = $"-i \"{videoPath}\" -vf \"vflip,hflip\" -q:v1 \"{outputDir}\\frame_%05d.png\"",
+                Arguments = $"-i \"{videoPath}\" -vf \"fps={fps},scale=-1:-1,vflip,hflip\" \"{outputDir}\\frame_%05d.png\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+
             using var proc = Process.Start(psi);
+            string output = proc.StandardOutput.ReadToEnd();
+            string error = proc.StandardError.ReadToEnd();
             proc.WaitForExit();
+
+            // 打印输出到日志
+            LOG.Info($"ExtractAndFlipFrames stdout:\n{output}");
+            LOG.Info($"ExtractAndFlipFrames stderr:\n{error}");
         }
 
         private void ConvertPngToDds(string pngDir, string ddsDir, int width, int height, string format)
@@ -297,6 +325,12 @@ namespace SSMT.ViewModels
                 using var proc = Process.Start(psi);
                 proc.WaitForExit();
             }
+        }
+
+        [RelayCommand]
+        public void SetDynamicTextureModGenerateFolderToMods()
+        {
+            DynamicTextureModGenerateFolderPath = PathManager.Path_ModsFolder;
         }
     }
 }

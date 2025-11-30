@@ -62,11 +62,21 @@
  Header="动态贴图Mod生成的文件夹位置"
  Text="{Binding DynamicTextureModGenerateFolderPath, Mode=TwoWay}" />
 
-                    <Button
+                    <StackPanel Orientation="Horizontal">
+                        <Button
+Margin="5"
+x:Name="Button_SetDynamicTextureModGenerateFolderToMods"
+Command="{Binding SetDynamicTextureModGenerateFolderToModsCommand}"
+Content="设为默认Mods文件夹" />
+
+                        <Button
  Margin="5"
  x:Name="Button_ChooseDynamicTextureModGenerateFolder"
  Command="{Binding ChooseDynamicTextureModGenerateFolderCommand}"
  Content="选择文件夹" />
+
+                    </StackPanel>
+                    
 
                     <ComboBox
  Margin="5"

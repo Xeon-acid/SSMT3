@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.WinUI.Behaviors;
+using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
@@ -73,10 +73,13 @@ namespace SSMT
 
             InitializeGameNameList();
 
+            InitializeMigotoPackageList();
+
             GameNameChanged(GlobalConfig.CurrentGameName);
         }
 
-   
+       
+
 
         private async void GameNameChanged(string ChangeToGameName)
         {
@@ -166,6 +169,10 @@ namespace SSMT
             ComboBox_DllReplace.SelectedIndex = gameConfig.DllReplaceSelectedIndex;
             ComboBox_AutoSetAnalyseOptions.SelectedIndex = gameConfig.AutoSetAnalyseOptionsSelectedIndex;
 
+            //LOG.Info("MigotoPackage设为: " + gameConfig.MigotoPackage);
+            ComboBox_MigotoPackage.SelectedItem = gameConfig.MigotoPackage;
+            
+
 
             //是否显示防报错按钮
             if (gameConfig.LogicName == LogicName.GIMI )
@@ -192,7 +199,6 @@ namespace SSMT
 
 
 			//最后如果有d3dx.ini的话，如果有哪些路径配置还是空的，就试图从d3dx.ini中解析读取，保底机制
-			//target,launch,launch_args,show_warnings,symlink
 			string d3dxini_path = Path.Combine(TextBox_3DmigotoPath.Text, "d3dx.ini");
 			if (File.Exists(d3dxini_path))
 			{
@@ -201,23 +207,10 @@ namespace SSMT
 				{
 					TextBox_TargetPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "target");
 				}
-
-				if (TextBox_LaunchPath.Text.Trim() == "")
-				{
-					LOG.Info("切换游戏后，发现LaunchPath为空，重新读取");
-					TextBox_LaunchPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "launch");
-				}
-
-				if (TextBox_LaunchArgsPath.Text.Trim() == "")
-				{
-					TextBox_LaunchArgsPath.Text = D3dxIniConfig.ReadAttributeFromD3DXIni(d3dxini_path, "launch_args");
-				}
-
-
 			}
 
-
 			IsLoading = false;
+
             //游戏切换后要把Package标识以及版本号改一下
             UpdatePackageVersionLink();
 
@@ -232,8 +225,7 @@ namespace SSMT
         {
             GameConfig gameConfig = new GameConfig();
             //设置左上角Package版本
-            string PackageName = ComboBox_LogicName.SelectedItem.ToString();
-            RepositoryInfo repositoryInfo = GithubUtils.GetCurrentRepositoryInfo(PackageName);
+            RepositoryInfo repositoryInfo = GithubUtils.GetCurrentRepositoryInfo(gameConfig.MigotoPackage);
             HyperlinkButton_MigotoPackageVersion.Content = repositoryInfo.RepositoryName + " " + gameConfig.GithubPackageVersion;
             var url = $"https://github.com/{repositoryInfo.OwnerName}/{repositoryInfo.RepositoryName}/releases/latest";
             HyperlinkButton_MigotoPackageVersion.NavigateUri = new Uri(url);
@@ -810,5 +802,21 @@ namespace SSMT
             gameConfig.PureGameMode = ToggleSwitch_PureGameMode.IsOn;
             gameConfig.SaveConfig();
         }
+
+        private void ComboBox_MigotoPackage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoading)
+            {
+                return;
+            }
+
+            GameConfig gameConfig = new GameConfig();
+            gameConfig.MigotoPackage = ComboBox_MigotoPackage.SelectedItem.ToString();
+            gameConfig.SaveConfig();
+        }
+
+
+
+
     }
 }
